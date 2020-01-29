@@ -6,3 +6,4 @@
 * Damien Gounot
 * Victoria Nadjar
 * Antoine Lesparre
+* Thomas Dognon
