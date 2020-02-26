@@ -8,7 +8,8 @@ import com.esiea.tp4A.domain.Position;
 public class MarsRoverImpl implements MarsRover {
     @Override
     public MarsRover initialize(Position position) {
-        return null;
+        this.position = position;
+        return this;
     }
 
     @Override
