@@ -1,6 +1,7 @@
 package com.esiea.tp4A;
 
 import com.esiea.tp4A.domain.Direction;
+import com.esiea.tp4A.domain.MarsRoverImpl;
 import com.esiea.tp4A.domain.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
