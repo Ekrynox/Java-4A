@@ -21,4 +21,16 @@ class MarsRoverImplTest {
         assertEquals(y, marsRover.getPosition().getY());
         assertEquals(dir, marsRover.getPosition().getDirection());
     }
+
+    @DisplayName("MarsRover Move")
+    @ParameterizedTest(name = "{0}")
+    @CsvSource({"'f,f,l,b'"})
+    void move(String command) {
+        MarsRoverImpl marsRover = new MarsRoverImpl();
+        marsRover.initialize(Position.of(0,0,Direction.NORTH));
+        Position position = marsRover.move(command);
+        assertEquals(1,position.getX());
+        assertEquals(2,position.getY());
+        assertEquals(Direction.WEST,position.getDirection());
+    }
 }
