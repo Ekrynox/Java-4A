@@ -5,8 +5,6 @@ import com.esiea.tp4A.domain.MarsRover;
 import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 
-import java.util.zip.DeflaterInputStream;
-
 public class MarsRoverImpl implements MarsRover {
     @Override
     public MarsRover initialize(Position position) {
@@ -26,9 +24,7 @@ public class MarsRoverImpl implements MarsRover {
 
     @Override
     public Position move(String command) {
-        int new_x = this.position.getX();
-        int new_y = this.position.getY();
-        Direction new_D = this.position.getDirection();
+        int new_x = this.position.getX(); int new_y = this.position.getY(); Direction new_D = this.position.getDirection();
         for(int i=0 ; i<command.length() ; i++){
             switch (command.charAt(i)){
                 case 'f':
@@ -55,10 +51,13 @@ public class MarsRoverImpl implements MarsRover {
                     else if(new_D.equals(Direction.EAST)) new_D = Direction.SOUTH;
                     else if(new_D.equals(Direction.WEST)) new_D = Direction.NORTH;
                     break;
+                default :
+                    break;
             }
         }
         return Position.of(new_x,new_y,new_D);
     }
+
 
     private Position position = Position.of(0, 0, Direction.NORTH);
     public Position getPosition() {
