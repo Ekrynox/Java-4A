@@ -23,14 +23,14 @@ class MarsRoverImplTest {
     }
 
     @DisplayName("MarsRover Move")
-    @ParameterizedTest(name = "{0}")
-    @CsvSource({"'f,f,l,b'"})
-    void move(String command) {
+    @ParameterizedTest(name = "{0} {1} {2} {3}")
+    @CsvSource({"'f,f,l,b',1,2,WEST","'f',0,1,NORTH","'r,r',0,0,SOUTH","'a,l,f,b',0,0,WEST"})
+    void move(String command, int x, int y, Direction dir) {
         MarsRoverImpl marsRover = new MarsRoverImpl();
         marsRover.initialize(Position.of(0,0,Direction.NORTH));
         Position position = marsRover.move(command);
-        assertEquals(1,position.getX());
-        assertEquals(2,position.getY());
-        assertEquals(Direction.WEST,position.getDirection());
+        assertEquals(x,position.getX());
+        assertEquals(y,position.getY());
+        assertEquals(dir,position.getDirection());
     }
 }
