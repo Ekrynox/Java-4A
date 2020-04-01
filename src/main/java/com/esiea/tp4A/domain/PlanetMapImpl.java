@@ -30,9 +30,9 @@ public class PlanetMapImpl implements PlanetMap {
     }
 
     public int getTileInfos(int x, int y) {
-        return map[y][x];
+        return map[x][y];
     }
-    public void setTileInfos(int x, int y, int value){ map[y][x] = value; }
+    public void setTileInfos(int x, int y, int value){ map[x][y] = value; }
 
     public void spawnObstacles() {
         int obstaclesToSpawn = (int) round(0.15 * (this.getSize()*this.getSize()));
@@ -41,7 +41,7 @@ public class PlanetMapImpl implements PlanetMap {
             for (int x = 0; x < this.getSize(); x++) {
                 for (int y = 0; y < this.getSize(); y++) {
                     int rand=(int)(Math.random() *((100 - 1) + 1)) +1;
-                    if ((obstaclesToSpawn > 0 && rand > 75)) {
+                    if ((obstaclesToSpawn > 0 && rand > 80)) {
                         map[x][y] = 1;
                      //   System.out.println("\n Spawn at x: " + x + "y: " + y);
                         obstaclesToSpawn--;
@@ -52,8 +52,8 @@ public class PlanetMapImpl implements PlanetMap {
     }
 
     public void displayMap(){
-        for(int y=-(getSize()/2);y<=(getSize()/2);y++){
-            for(int x=-(getSize()/2);x<=(getSize()/2);x++){
+        for(int x=0;x<this.getSize();x++){
+            for(int y=0;y<this.getSize();y++){
                 System.out.print(getTileInfos(x, y));
             } System.out.println();
         }
