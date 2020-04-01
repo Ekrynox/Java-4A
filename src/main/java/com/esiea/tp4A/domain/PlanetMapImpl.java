@@ -10,13 +10,15 @@ import static java.lang.Math.round;
 public class PlanetMapImpl implements PlanetMap {
 
     private final int [][] map;
-    private final int [] sizeType = {100, 300, 600};
-    private final int size;
+    private final int [] size = {100, 300, 600};
+    private final int sizeIndex;
 
     public PlanetMapImpl() {
         Random rand = new Random();
-        size = rand.nextInt(sizeType.length);
-        this.map = new int[sizeType[size]][sizeType[size]];
+        sizeIndex = rand.nextInt(size.length);
+      //  System.out.println("sizeIndex : " + sizeIndex);
+        this.map = new int[size[sizeIndex]][size[sizeIndex]];
+      //  System.out.println("size : " +size[sizeIndex]);
     }
 
     public int[][] getMap() {
@@ -24,21 +26,13 @@ public class PlanetMapImpl implements PlanetMap {
     }
 
     public int getSize() {
-        return size;
+        return size[sizeIndex];
     }
 
     public int getTileInfos(int x, int y) {
         return map[y][x];
     }
 
-
-    public void displayMap(){
-        for(int y=-(getSize()/2);y<=(getSize()/2);y++){
-            for(int x=-(getSize()/2);x<=(getSize()/2);x++){
-                System.out.print(getTileInfos(x, y));
-            } System.out.println();
-        }
-    }
 
     public void spawnObstacles() {
         int obstaclesToSpawn = (int) round(0.15 * this.getSize());
@@ -55,6 +49,9 @@ public class PlanetMapImpl implements PlanetMap {
         }
     }
 
+    public void setTileInfos(int x, int y, int value){
+        map[y][x] = value;
+    }
 
     @Override
     public Set<Position> obstaclePositions() {
