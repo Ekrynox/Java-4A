@@ -33,7 +33,7 @@ class PlanetMapImplTest {
         planetMap.setTileInfos(10,20,2);
         planetMap.setTileInfos(5,5,1);
         int [][] map2 = new int[mapSize][mapSize];
-        map2[20][10]=2;
+        map2[10][20]=2;
         map2[5][5]=1;
         Assertions.assertThat(map).isEqualTo(map2);
     }
@@ -72,6 +72,14 @@ class PlanetMapImplTest {
         obstaclesPositions = planetMap.obstaclePositions();
         Assertions.assertThat(obstaclesPositions.size()).isEqualTo(round(0.15 * area));
 
+    }
+
+    @Test
+
+    void displayMap(){
+        PlanetMapImpl planetMap = new PlanetMapImpl();
+        planetMap.spawnObstacles();
+        planetMap.displayMap();
     }
 
 }
