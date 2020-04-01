@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.lang.Math.round;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlanetMapImplTest {
@@ -58,6 +59,19 @@ class PlanetMapImplTest {
         Assertions.assertThat(planetMap.getTileInfos(0,0)).isEqualTo(1);
         planetMap.setTileInfos(0,0,0);
         Assertions.assertThat(planetMap.getTileInfos(0,0)).isEqualTo(0);
+    }
+
+
+    @Test
+
+    void spawnObstacles(){
+        PlanetMapImpl planetMap = new PlanetMapImpl();
+        planetMap.spawnObstacles();
+        int area = planetMap.getSize()*planetMap.getSize();
+        Set<Position> obstaclesPositions;
+        obstaclesPositions = planetMap.obstaclePositions();
+        Assertions.assertThat(obstaclesPositions.size()).isEqualTo(round(0.15 * area));
+
     }
 
 }
