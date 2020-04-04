@@ -63,4 +63,9 @@ public class MarsRoverImpl implements MarsRover {
     public Position getPosition() {
         return position;
     }
+
+    private int laserRange = 0;
+    public int getLaserRange() {
+        return laserRange;
+    }
 }

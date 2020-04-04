@@ -3,11 +3,13 @@ package com.esiea.tp4A;
 import com.esiea.tp4A.domain.Direction;
 import com.esiea.tp4A.domain.Position;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MarsRoverImplTest {
 
@@ -32,5 +34,14 @@ class MarsRoverImplTest {
         assertEquals(x,position.getX());
         assertEquals(y,position.getY());
         assertEquals(dir,position.getDirection());
+    }
+
+    @DisplayName("MarsRover Configure Laser Range")
+    @ParameterizedTest(name = "{0}")
+    @CsvSource({"0", "1", "30", "100", "-1"})
+    void configureLaserRange(int range) {
+        MarsRoverImpl marsRover = new MarsRoverImpl();
+        marsRover.configureLaserRange(range);
+        assertEquals(range, marsRover.getLaserRange());
     }
 }
