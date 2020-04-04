@@ -61,12 +61,5 @@ public class MarsRoverImpl implements MarsRover {
 
 
     private Position position = Position.of(0, 0, Direction.NORTH);
-    public Position getPosition() {
-        return position;
-    }
-
     private int laserRange = 0;
-    public int getLaserRange() {
-        return laserRange;
-    }
 }
