@@ -1,4 +1,7 @@
-package com.esiea.tp4A.domain;
+package com.esiea.tp4A;
+
+import com.esiea.tp4A.domain.PlanetMap;
+import com.esiea.tp4A.domain.Position;
 
 import java.math.MathContext;
 import java.util.HashSet;

@@ -1,14 +1,11 @@
 package com.esiea.tp4A;
-import com.esiea.tp4A.domain.PlanetMapImpl;
 import com.esiea.tp4A.domain.Position;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import static java.lang.Math.round;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PlanetMapImplTest {
 
