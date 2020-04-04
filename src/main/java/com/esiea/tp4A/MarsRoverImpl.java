@@ -63,4 +63,11 @@ public class MarsRoverImpl implements MarsRover {
     public Position getPosition() {
         return position;
     }
+
+
+
+    private Position position = Position.of(0, 0, Direction.NORTH);
+    public Position getPosition() {
+        return position;
+    }
 }
