@@ -8,6 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,12 +18,17 @@ class MarsRoverImplTest {
     @DisplayName("MarsRover Initialize")
     @ParameterizedTest(name = "{0} {1} {2}")
     @CsvSource({"0, 0, NORTH", "2, 29, SOUTH", "4, 6, EAST", "7, 16, WEST", "-9, 19, NORTH"})
-    void initialize(int x, int y, Direction dir) {
+    void initialize(int x, int y, Direction dir) throws NoSuchFieldException, IllegalAccessException {
         MarsRoverImpl marsRover = new MarsRoverImpl();
         marsRover.initialize(Position.of(x, y, dir));
-        assertEquals(x, marsRover.getPosition().getX());
-        assertEquals(y, marsRover.getPosition().getY());
-        assertEquals(dir, marsRover.getPosition().getDirection());
+
+        final Field field = marsRover.getClass().getDeclaredField("position");
+        field.setAccessible(true);
+        Position position = (Position)field.get(marsRover);
+
+        assertEquals(x, position.getX());
+        assertEquals(y, position.getY());
+        assertEquals(dir, position.getDirection());
     }
 
     @DisplayName("MarsRover Move")
@@ -39,9 +46,13 @@ class MarsRoverImplTest {
     @DisplayName("MarsRover Configure Laser Range")
     @ParameterizedTest(name = "{0}")
     @CsvSource({"0", "1", "30", "100", "-1"})
-    void configureLaserRange(int range) {
+    void configureLaserRange(int range) throws NoSuchFieldException, IllegalAccessException {
         MarsRoverImpl marsRover = new MarsRoverImpl();
         marsRover.configureLaserRange(range);
-        assertEquals(range, marsRover.getLaserRange());
+
+        final Field field = marsRover.getClass().getDeclaredField("laserRange");
+        field.setAccessible(true);
+
+        assertEquals(range, field.get(marsRover));
     }
 }
