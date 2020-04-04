@@ -19,7 +19,8 @@ public class MarsRoverImpl implements MarsRover {
 
     @Override
     public MarsRover configureLaserRange(int range) {
-        return null;
+        this.laserRange = range;
+        return this;
     }
 
     @Override
