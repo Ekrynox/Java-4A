@@ -34,9 +34,9 @@ class MarsRoverImplTest {
     @ParameterizedTest(name = "{0} {1} {2} {3}")
     @DisplayName("MarsRover Move")
     @CsvSource({"'fflb', -10, 0, -9, 2, WEST", "'f', 5, 0, 5, 1, NORTH", "'rr', 0, 0, 0, 0, SOUTH", "'lfb', 0, 0, 0, 0, WEST", "'f', 0, 50, 0, -49, NORTH", "'b', 0, -49, 0, 50, NORTH", "'rf', 50, 0, -49, 0, EAST"})
-    void move(String command, int posx, int posy, int x, int y, Direction dir) {
+    void move(String command, int posX, int posY, int x, int y, Direction dir) {
         MarsRoverImpl marsRover = new MarsRoverImpl();
-        marsRover.initialize(Position.of(posx, posy, Direction.NORTH));
+        marsRover.initialize(Position.of(posX, posY, Direction.NORTH));
         Position position = marsRover.move(command);
         assertEquals(x, position.getX());
         assertEquals(y, position.getY());
