@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MarsRoverImplTest {
 
-    @DisplayName("MarsRover Initialize")
     @ParameterizedTest(name = "{0} {1} {2}")
+    @DisplayName("MarsRover Initialize")
     @CsvSource({"0, 0, NORTH", "2, 29, SOUTH", "4, 6, EAST", "7, 16, WEST", "-9, 19, NORTH"})
     void initialize(int x, int y, Direction dir) throws NoSuchFieldException, IllegalAccessException {
         MarsRoverImpl marsRover = new MarsRoverImpl();
@@ -31,20 +31,20 @@ class MarsRoverImplTest {
         assertEquals(dir, position.getDirection());
     }
 
-    @DisplayName("MarsRover Move")
     @ParameterizedTest(name = "{0} {1} {2} {3}")
-    @CsvSource({"'fflb', 1, 2, WEST", "'f', 0, 1, NORTH", "'rr', 0, 0, SOUTH","'lfb', 0, 0, WEST"})
-    void move(String command, int x, int y, Direction dir) {
+    @DisplayName("MarsRover Move")
+    @CsvSource({"'fflb', -10, 0, -9, 2, WEST", "'f', 5, 0, 5, 1, NORTH", "'rr', 0, 0, 0, 0, SOUTH", "'lfb', 0, 0, 0, 0, WEST", "'f', 0, 50, 0, -49, NORTH", "'b', 0, -49, 0, 50, NORTH", "'rf', 50, 0, -49, 0, EAST"})
+    void move(String command, int posx, int posy, int x, int y, Direction dir) {
         MarsRoverImpl marsRover = new MarsRoverImpl();
-        marsRover.initialize(Position.of(0,0,Direction.NORTH));
+        marsRover.initialize(Position.of(posx, posy, Direction.NORTH));
         Position position = marsRover.move(command);
-        assertEquals(x,position.getX());
-        assertEquals(y,position.getY());
-        assertEquals(dir,position.getDirection());
+        assertEquals(x, position.getX());
+        assertEquals(y, position.getY());
+        assertEquals(dir, position.getDirection());
     }
 
-    @DisplayName("MarsRover Configure Laser Range")
     @ParameterizedTest(name = "{0}")
+    @DisplayName("MarsRover Configure Laser Range")
     @CsvSource({"0", "1", "30", "100", "-1"})
     void configureLaserRange(int range) throws NoSuchFieldException, IllegalAccessException {
         MarsRoverImpl marsRover = new MarsRoverImpl();
