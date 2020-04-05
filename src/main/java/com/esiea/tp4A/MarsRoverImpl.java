@@ -12,6 +12,7 @@ public class MarsRoverImpl implements MarsRover {
     private final Position position;
     private final int laserRange;
     private final Set<Position> obstacle;
+    private final int mapSize = 100;
 
     public MarsRoverImpl() {
          this.position = Position.of(0, 0, Direction.NORTH);
@@ -32,7 +33,7 @@ public class MarsRoverImpl implements MarsRover {
 
     @Override
     public MarsRover updateMap(PlanetMap map) {
-        return null;
+        return new MarsRoverImpl(this.position, this.laserRange, map.obstaclePositions());
     }
 
     @Override
@@ -71,58 +72,38 @@ public class MarsRoverImpl implements MarsRover {
     }
 
     private Position goForward(Position pos) {
-        switch (pos.getDirection()) {
-            case NORTH:
-                return Position.of(pos.getX(), pos.getY() + 1, pos.getDirection());
-            case SOUTH:
-                return Position.of(pos.getX(), pos.getY() - 1, pos.getDirection());
-            case EAST:
-                return Position.of(pos.getX() + 1, pos.getY(), pos.getDirection());
-            case WEST:
-                return Position.of(pos.getX() - 1, pos.getY(), pos.getDirection());
-        }
+        Direction dir = pos.getDirection();
+        if (dir == Direction.NORTH) return Position.of(pos.getX(), pos.getY() + 1, pos.getDirection());
+        if (dir == Direction.SOUTH) return Position.of(pos.getX(), pos.getY() - 1, pos.getDirection());
+        if (dir == Direction.EAST) return Position.of(pos.getX() + 1, pos.getY(), pos.getDirection());
+        if (dir == Direction.WEST) return Position.of(pos.getX() - 1, pos.getY(), pos.getDirection());
         return pos;
     }
 
     private Position goBackward(Position pos) {
-        switch (pos.getDirection()) {
-            case NORTH:
-                return Position.of(pos.getX(), pos.getY() - 1, pos.getDirection());
-            case SOUTH:
-                return Position.of(pos.getX(), pos.getY() + 1, pos.getDirection());
-            case EAST:
-                return Position.of(pos.getX() - 1, pos.getY(), pos.getDirection());
-            case WEST:
-                return Position.of(pos.getX() + 1, pos.getY(), pos.getDirection());
-        }
+        Direction dir = pos.getDirection();
+        if (dir == Direction.NORTH) return Position.of(pos.getX(), pos.getY() - 1, pos.getDirection());
+        if (dir == Direction.SOUTH) return Position.of(pos.getX(), pos.getY() + 1, pos.getDirection());
+        if (dir == Direction.EAST) return Position.of(pos.getX() - 1, pos.getY(), pos.getDirection());
+        if (dir == Direction.WEST) return Position.of(pos.getX() + 1, pos.getY(), pos.getDirection());
         return pos;
     }
 
     private Position turnLeft(Position pos) {
-        switch (pos.getDirection()) {
-            case NORTH:
-                return Position.of(pos.getX(), pos.getY(), Direction.WEST);
-            case SOUTH:
-                return Position.of(pos.getX(), pos.getY(), Direction.EAST);
-            case EAST:
-                return Position.of(pos.getX(), pos.getY(), Direction.NORTH);
-            case WEST:
-                return Position.of(pos.getX(), pos.getY(), Direction.SOUTH);
-        }
+        Direction dir = pos.getDirection();
+        if (dir == Direction.NORTH) return Position.of(pos.getX(), pos.getY(), Direction.WEST);
+        if (dir == Direction.SOUTH) return Position.of(pos.getX(), pos.getY(), Direction.EAST);
+        if (dir == Direction.EAST) return Position.of(pos.getX(), pos.getY(), Direction.NORTH);
+        if (dir == Direction.WEST) return Position.of(pos.getX(), pos.getY(), Direction.SOUTH);
         return pos;
     }
 
     private Position turnRight(Position pos) {
-        switch (pos.getDirection()) {
-            case NORTH:
-                return Position.of(pos.getX(), pos.getY(), Direction.EAST);
-            case SOUTH:
-                return Position.of(pos.getX(), pos.getY(), Direction.WEST);
-            case EAST:
-                return Position.of(pos.getX(), pos.getY(), Direction.SOUTH);
-            case WEST:
-                return Position.of(pos.getX(), pos.getY(), Direction.NORTH);
-        }
+        Direction dir = pos.getDirection();
+        if (dir == Direction.NORTH) return Position.of(pos.getX(), pos.getY(), Direction.EAST);
+        if (dir == Direction.SOUTH) return Position.of(pos.getX(), pos.getY(), Direction.WEST);
+        if (dir == Direction.EAST) return Position.of(pos.getX(), pos.getY(), Direction.SOUTH);
+        if (dir == Direction.WEST) return Position.of(pos.getX(), pos.getY(), Direction.NORTH);
         return pos;
     }
 
@@ -130,10 +111,8 @@ public class MarsRoverImpl implements MarsRover {
         int x = pos.getX();
         int y = pos.getY();
 
-        if (y == 51) y = -49;
-        if (x == 51) x = -49;
-        if (y == -50) y = 50;
-        if (x == -50) x = 50;
+        x = Math.floorMod(x - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
+        y = Math.floorMod(y - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
 
         return Position.of(x, y, pos.getDirection());
     }

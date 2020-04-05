@@ -2,15 +2,20 @@ package com.esiea.tp4A;
 
 import com.esiea.tp4A.domain.Direction;
 import com.esiea.tp4A.domain.MarsRover;
+import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class MarsRoverImplTest {
 
@@ -30,7 +35,7 @@ class MarsRoverImplTest {
         assertEquals(dir, position.getDirection());
     }
 
-    @ParameterizedTest(name = "{0} {1} {2} {3}")
+    @ParameterizedTest(name = "{0} {1} {2}")
     @DisplayName("MarsRover Move")
     @CsvSource({
         "'b', 0, 0, 0, -1, NORTH", "'rb', 0, 0, -1, 0, EAST", "'rrb', 0, 0, 0, 1, SOUTH", "'rrrb', 0, 0, 1, 0, WEST", "'rrrrb', 0, 0, 0, -1, NORTH", "'f', 0, 0, 0, 1, NORTH", "'rf', 0, 0, 1, 0, EAST", "'rrf', 0, 0, 0, -1, SOUTH", "'rrrf', 0, 0, -1, 0, WEST", "'rrrrf', 0, 0, 0, 1, NORTH",
@@ -47,6 +52,21 @@ class MarsRoverImplTest {
         assertEquals(dir, position.getDirection());
     }
 
+    @Test
+    @DisplayName("MarsRover Move with other case")
+    void moveComplex() {
+        int x = (int) (Math.random() * 100) - 49;
+        int y = (int) (Math.random() * 100) - 49;
+
+        MarsRoverImpl marsRover = new MarsRoverImpl();
+        MarsRover newMarsRover = marsRover.initialize(Position.of(x, y, null));
+
+        Position position = newMarsRover.move("lrbfs");
+        assertEquals(x, position.getX());
+        assertEquals(y, position.getY());
+        assertNull(position.getDirection());
+    }
+
     @ParameterizedTest(name = "{0}")
     @DisplayName("MarsRover Configure Laser Range")
     @CsvSource({"0", "1", "30", "100", "-1"})
@@ -58,5 +78,32 @@ class MarsRoverImplTest {
         field.setAccessible(true);
 
         assertEquals(range, field.get(newMarsRover));
+    }
+
+    @Test
+    @DisplayName("MarsRover Update Map")
+    void updateMap() throws NoSuchFieldException, IllegalAccessException {
+        MarsRoverImpl marsRover = new MarsRoverImpl();
+        PlanetMapImpl map = new PlanetMapImpl(); //A Map with 15% obstacle randomly placed
+        MarsRover newMarsRover = marsRover.updateMap(map);
+        Set<Position> obstacle = map.obstaclePositions();
+
+        final Field obstacleField = marsRover.getClass().getDeclaredField("obstacle");
+        obstacleField.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        Set<Position> tmp = (Set<Position>) obstacleField.get(newMarsRover);
+
+        assertEquals(obstacle.size(), tmp.size());
+        for (Position obs : obstacle) {
+            Iterator<Position> iter = tmp.iterator();
+            while (iter.hasNext()) {
+                Position pos = iter.next();
+                if (obs.getX() == pos.getX() && obs.getY() == pos.getY() && obs.getDirection() == pos.getDirection()) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+        assertEquals(0, tmp.size());
     }
 }
