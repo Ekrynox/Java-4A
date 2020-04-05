@@ -71,7 +71,8 @@ class MarsRoverImplTest {
     @ParameterizedTest(name = "{0} ({1}, {2}) {3}")
     @DisplayName("MarsRover Move Obstacle")
     @CsvSource({"'f', 0, 0, NORTH", "'fflb', 1, 0, WEST", "'rflflf', 1, 1, WEST", "'rflflfrflfrb', 0, 2, NORTH",
-        "'sf', 0, 1, NORTH", "'fsflb', 1, 1, WEST", "'rflflsf', 0, 1, WEST", "'bbsfff', 0, 0, NORTH"})
+        "'sf', 0, 1, NORTH", "'fsflb', 1, 1, WEST", "'rflflsf', 0, 1, WEST", "'bbsfff', 0, 0, NORTH", "'lsrf', 0, 0, NORTH", "'llsb', 0, 0, SOUTH", "'rslf', 0, 0, NORTH",
+        "'lsffffsffff', -5, 0, WEST", "'lsffffsfffsf', -6, 0, WEST"})
     void moveObstacle(String command, int x, int y, Direction dir) {
         MarsRover marsRover = new MarsRoverImpl();
         marsRover = marsRover.initialize(Position.of(0, 0, Direction.NORTH));
@@ -80,6 +81,8 @@ class MarsRoverImplTest {
         PlanetMap map = () -> {
             HashSet<Position> map1 = new HashSet<>();
             map1.add(Position.of(0, 1, null));
+            map1.add(Position.of(-5, 0, null));
+            map1.add(Position.of(-6, 0, null));
             return map1;
         };
         marsRover = marsRover.updateMap(map);
