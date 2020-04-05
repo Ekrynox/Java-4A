@@ -11,20 +11,23 @@ import java.util.Set;
 public class MarsRoverImpl implements MarsRover {
     private final Position position;
     private final int laserRange;
+    private final Set<Position> obstacle;
 
     public MarsRoverImpl() {
          this.position = Position.of(0, 0, Direction.NORTH);
          this.laserRange = 0;
+         this.obstacle = new HashSet<>();
     }
 
-    public MarsRoverImpl(Position position, int laserRange) {
+    public MarsRoverImpl(Position position, int laserRange, Set<Position> obstacle) {
         this.position = position;
         this.laserRange = laserRange;
+        this.obstacle = obstacle;
     }
 
     @Override
     public MarsRover initialize(Position position) {
-        return new MarsRoverImpl(position, this.laserRange);
+        return new MarsRoverImpl(position, this.laserRange, this.obstacle);
     }
 
     @Override
@@ -34,7 +37,7 @@ public class MarsRoverImpl implements MarsRover {
 
     @Override
     public MarsRover configureLaserRange(int range) {
-        return new MarsRoverImpl(this.position, range);
+        return new MarsRoverImpl(this.position, range, this.obstacle);
     }
 
     @Override
@@ -77,9 +80,8 @@ public class MarsRoverImpl implements MarsRover {
                 return Position.of(pos.getX() + 1, pos.getY(), pos.getDirection());
             case WEST:
                 return Position.of(pos.getX() - 1, pos.getY(), pos.getDirection());
-            default:
-                return pos;
         }
+        return pos;
     }
 
     private Position goBackward(Position pos) {
@@ -92,9 +94,8 @@ public class MarsRoverImpl implements MarsRover {
                 return Position.of(pos.getX() - 1, pos.getY(), pos.getDirection());
             case WEST:
                 return Position.of(pos.getX() + 1, pos.getY(), pos.getDirection());
-            default:
-                return pos;
         }
+        return pos;
     }
 
     private Position turnLeft(Position pos) {
@@ -107,9 +108,8 @@ public class MarsRoverImpl implements MarsRover {
                 return Position.of(pos.getX(), pos.getY(), Direction.NORTH);
             case WEST:
                 return Position.of(pos.getX(), pos.getY(), Direction.SOUTH);
-            default:
-                return pos;
         }
+        return pos;
     }
 
     private Position turnRight(Position pos) {
@@ -122,9 +122,8 @@ public class MarsRoverImpl implements MarsRover {
                 return Position.of(pos.getX(), pos.getY(), Direction.SOUTH);
             case WEST:
                 return Position.of(pos.getX(), pos.getY(), Direction.NORTH);
-            default:
-                return pos;
         }
+        return pos;
     }
 
     private Position getSphericalPos(Position pos) {
