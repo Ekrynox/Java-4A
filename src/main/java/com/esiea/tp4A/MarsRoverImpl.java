@@ -5,11 +5,26 @@ import com.esiea.tp4A.domain.MarsRover;
 import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class MarsRoverImpl implements MarsRover {
+    private final Position position;
+    private final int laserRange;
+
+    public MarsRoverImpl() {
+         this.position = Position.of(0, 0, Direction.NORTH);
+         this.laserRange = 0;
+    }
+
+    public MarsRoverImpl(Position position, int laserRange) {
+        this.position = position;
+        this.laserRange = laserRange;
+    }
+
     @Override
     public MarsRover initialize(Position position) {
-        this.position = position;
-        return this;
+        return new MarsRoverImpl(position, this.laserRange);
     }
 
     @Override
@@ -19,8 +34,7 @@ public class MarsRoverImpl implements MarsRover {
 
     @Override
     public MarsRover configureLaserRange(int range) {
-        this.laserRange = range;
-        return this;
+        return new MarsRoverImpl(this.position, range);
     }
 
     @Override
@@ -59,11 +73,6 @@ public class MarsRoverImpl implements MarsRover {
 
         }
 
-        this.position = Position.of(new_x, new_y, new_D);
-        return this.position;
+        return Position.of(new_x, new_y, new_D);
     }
-
-
-    private Position position = Position.of(0, 0, Direction.NORTH);
-    private int laserRange = 0;
 }
