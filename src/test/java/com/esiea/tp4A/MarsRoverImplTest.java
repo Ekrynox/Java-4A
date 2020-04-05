@@ -32,7 +32,10 @@ class MarsRoverImplTest {
 
     @ParameterizedTest(name = "{0} {1} {2} {3}")
     @DisplayName("MarsRover Move")
-    @CsvSource({"'fflb', -10, 0, -9, 2, WEST", "'f', 5, 0, 5, 1, NORTH", "'rr', 0, 0, 0, 0, SOUTH", "'lfb', 0, 0, 0, 0, WEST", "'f', 0, 50, 0, -49, NORTH", "'b', 0, -49, 0, 50, NORTH", "'rf', 50, 0, -49, 0, EAST"})
+    @CsvSource({
+        "'b', 0, 0, 0, -1, NORTH", "'rb', 0, 0, -1, 0, EAST", "'rrb', 0, 0, 0, 1, SOUTH", "'rrrb', 0, 0, 1, 0, WEST", "'rrrrb', 0, 0, 0, -1, NORTH", "'f', 0, 0, 0, 1, NORTH", "'rf', 0, 0, 1, 0, EAST", "'rrf', 0, 0, 0, -1, SOUTH", "'rrrf', 0, 0, -1, 0, WEST", "'rrrrf', 0, 0, 0, 1, NORTH",
+        "'llllb', 0, 0, 0, -1, NORTH", "'lllb', 0, 0, -1, 0, EAST", "'llb', 0, 0, 0, 1, SOUTH", "'lb', 0, 0, 1, 0, WEST", "'b', 0, 0, 0, -1, NORTH", "'llllf', 0, 0, 0, 1, NORTH", "'lllf', 0, 0, 1, 0, EAST", "'llf', 0, 0, 0, -1, SOUTH", "'lf', 0, 0, -1, 0, WEST", "'f', 0, 0, 0, 1, NORTH",
+        "'fflb', -10, 0, -9, 2, WEST", "'f', 5, 0, 5, 1, NORTH", "'rr', 0, 0, 0, 0, SOUTH", "'lfb', 0, 0, 0, 0, WEST", "'f', 0, 50, 0, -49, NORTH", "'b', 0, -49, 0, 50, NORTH", "'rf', 50, 0, -49, 0, EAST"})
     void move(String command, int posX, int posY, int x, int y, Direction dir) {
         MarsRoverImpl marsRover = new MarsRoverImpl();
         MarsRover newMarsRover = marsRover.initialize(Position.of(posX, posY, Direction.NORTH));
