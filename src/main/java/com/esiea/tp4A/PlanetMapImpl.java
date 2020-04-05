@@ -13,65 +13,47 @@ import static java.lang.Math.round;
 public class PlanetMapImpl implements PlanetMap {
 
     private final int [][] map;
-    private final int [] size = {100, 300, 600};
-    private final int sizeIndex;
+    private final int size = 100;
 
     public PlanetMapImpl() {
-        Random rand = new Random();
-        sizeIndex = rand.nextInt(size.length);
-      //  System.out.println("sizeIndex : " + sizeIndex);
-        this.map = new int[size[sizeIndex]][size[sizeIndex]];
-      //  System.out.println("size : " +size[sizeIndex]);
-    }
+        this.map = new int[this.size][this.size];
+        int x, y;
 
-    public int[][] getMap() {
-        return map;
-    }
+        for (y = 0; y < this.size; y++) {
+            for (x = 0; x < this.size; x++) {
+                this.map[y][x] = 0;
+            }
+        }
 
-    public int getSize() {
-        return size[sizeIndex];
-    }
+        int obstaclesToSpawn = (int) round(0.15 * this.size * this.size);
+        for (int n = 0; n < obstaclesToSpawn; n++) {
+            while (true) {
+                x = (int) (Math.random() * this.size);
+                y = (int) (Math.random() * this.size);
 
-    public int getTileInfos(int x, int y) {
-        return map[x][y];
-    }
-    public void setTileInfos(int x, int y, int value){ map[x][y] = value; }
-
-    public void spawnObstacles() {
-        int obstaclesToSpawn = (int) round(0.15 * (this.getSize()*this.getSize()));
-        System.out.println("Map size = " + this.getSize() + "\n Map area : "+ (this.getSize()*this.getSize()) +"\nObstacles to spawn = " + obstaclesToSpawn);
-        while (obstaclesToSpawn > 0) {
-            for (int x = 0; x < this.getSize(); x++) {
-                for (int y = 0; y < this.getSize(); y++) {
-                    int rand=(int)(Math.random() *((100 - 1) + 1)) +1;
-                    if ((obstaclesToSpawn > 0 && rand > 80)) {
-                        map[x][y] = 1;
-                     //   System.out.println("\n Spawn at x: " + x + "y: " + y);
-                        obstaclesToSpawn--;
-                    }
+                if (this.map[y][x] == 0) {
+                    this.map[y][x] = 1;
+                    break;
                 }
             }
         }
     }
 
-    public void displayMap(){
-        for(int x=0;x<this.getSize();x++){
-            for(int y=0;y<this.getSize();y++){
-                System.out.print(getTileInfos(x, y));
-            } System.out.println();
-        }
-    }
-
-
-
     @Override
     public Set<Position> obstaclePositions() {
         Set<Position> positions = new HashSet<>();
-        for(int x=0; x<this.getSize(); x++) {
-            for(int y=0; y<this.getSize(); y++) {
-            if(map[x][y] == 1) {
-                Position position = new Position.FixedPosition(y,x,null);positions.add(position);
-            } }
-        }return positions;
+        int x, y;
+        int offset = 1 - this.size / 2;
+
+        for (y = 0; y < this.size; y++) {
+            for (x = 0; x <this.size; x++) {
+                if (map[y][x] == 1) {
+                    Position position = new Position.FixedPosition(x + offset, y  + offset, null);
+                    positions.add(position);
+                }
+            }
+        }
+
+        return positions;
     }
 }
