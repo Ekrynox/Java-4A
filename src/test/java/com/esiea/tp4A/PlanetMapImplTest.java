@@ -1,12 +1,9 @@
 package com.esiea.tp4A;
 import com.esiea.tp4A.domain.Position;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.Set;
 
 import static java.lang.Math.round;
