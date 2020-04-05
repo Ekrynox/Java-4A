@@ -39,40 +39,103 @@ public class MarsRoverImpl implements MarsRover {
 
     @Override
     public Position move(String command) {
-        int new_x = this.position.getX();
-        int new_y = this.position.getY();
-        Direction new_D = this.position.getDirection();
-
-        int i;
+        Position pos = this.position;
+        Position tmp;
 
         for (char c : command.toCharArray()) {
-            i = (c == 'f' ? 1 : (c == 'b' ? -1 : 0));
-
-            if (new_D.equals(Direction.NORTH)) new_y += i;
-            if (new_D.equals(Direction.SOUTH)) new_y -= i;
-            if (new_D.equals(Direction.EAST)) new_x += i;
-            if (new_D.equals(Direction.WEST)) new_x -= i;
-
-            if (c == 'l') {
-                if (new_D.equals(Direction.NORTH)) new_D = Direction.WEST;
-                else if (new_D.equals(Direction.SOUTH)) new_D = Direction.EAST;
-                else if (new_D.equals(Direction.EAST)) new_D = Direction.NORTH;
-                else if (new_D.equals(Direction.WEST)) new_D = Direction.SOUTH;
-            }
-            if (c == 'r') {
-                if (new_D.equals(Direction.NORTH)) new_D = Direction.EAST;
-                else if (new_D.equals(Direction.SOUTH)) new_D = Direction.WEST;
-                else if (new_D.equals(Direction.EAST)) new_D = Direction.SOUTH;
-                else if (new_D.equals(Direction.WEST)) new_D = Direction.NORTH;
+            switch (c) {
+                case 'f':
+                    tmp = goForward(pos);
+                    break;
+                case 'b':
+                    tmp = goBackward(pos);
+                    break;
+                case 'l':
+                    tmp = turnLeft(pos);
+                    break;
+                case 'r':
+                    tmp = turnRight(pos);
+                    break;
+                default:
+                    tmp = pos;
+                    break;
             }
 
-            if (new_y == 51) new_y = -49;
-            if (new_x == 51) new_x = -49;
-            if (new_y == -50) new_y = 50;
-            if (new_x == -50) new_y = 50;
-
+            pos = getSphericalPos(tmp);
         }
 
-        return Position.of(new_x, new_y, new_D);
+        return pos;
+    }
+
+    private Position goForward(Position pos) {
+        switch (pos.getDirection()) {
+            case NORTH:
+                return Position.of(pos.getX(), pos.getY() + 1, pos.getDirection());
+            case SOUTH:
+                return Position.of(pos.getX(), pos.getY() - 1, pos.getDirection());
+            case EAST:
+                return Position.of(pos.getX() + 1, pos.getY(), pos.getDirection());
+            case WEST:
+                return Position.of(pos.getX() - 1, pos.getY(), pos.getDirection());
+            default:
+                return pos;
+        }
+    }
+
+    private Position goBackward(Position pos) {
+        switch (pos.getDirection()) {
+            case NORTH:
+                return Position.of(pos.getX(), pos.getY() - 1, pos.getDirection());
+            case SOUTH:
+                return Position.of(pos.getX(), pos.getY() + 1, pos.getDirection());
+            case EAST:
+                return Position.of(pos.getX() - 1, pos.getY(), pos.getDirection());
+            case WEST:
+                return Position.of(pos.getX() + 1, pos.getY(), pos.getDirection());
+            default:
+                return pos;
+        }
+    }
+
+    private Position turnLeft(Position pos) {
+        switch (pos.getDirection()) {
+            case NORTH:
+                return Position.of(pos.getX(), pos.getY(), Direction.WEST);
+            case SOUTH:
+                return Position.of(pos.getX(), pos.getY(), Direction.EAST);
+            case EAST:
+                return Position.of(pos.getX(), pos.getY(), Direction.NORTH);
+            case WEST:
+                return Position.of(pos.getX(), pos.getY(), Direction.SOUTH);
+            default:
+                return pos;
+        }
+    }
+
+    private Position turnRight(Position pos) {
+        switch (pos.getDirection()) {
+            case NORTH:
+                return Position.of(pos.getX(), pos.getY(), Direction.EAST);
+            case SOUTH:
+                return Position.of(pos.getX(), pos.getY(), Direction.WEST);
+            case EAST:
+                return Position.of(pos.getX(), pos.getY(), Direction.SOUTH);
+            case WEST:
+                return Position.of(pos.getX(), pos.getY(), Direction.NORTH);
+            default:
+                return pos;
+        }
+    }
+
+    private Position getSphericalPos(Position pos) {
+        int x = pos.getX();
+        int y = pos.getY();
+
+        if (y == 51) y = -49;
+        if (x == 51) x = -49;
+        if (y == -50) y = 50;
+        if (x == -50) x = 50;
+
+        return Position.of(x, y, pos.getDirection());
     }
 }
