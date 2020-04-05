@@ -3,9 +3,7 @@ package com.esiea.tp4A;
 import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 
-import java.math.MathContext;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 import java.lang.Math;
 import static java.lang.Math.round;
