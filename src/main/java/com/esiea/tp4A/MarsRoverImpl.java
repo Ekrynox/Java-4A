@@ -6,6 +6,7 @@ import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class MarsRoverImpl implements MarsRover {
@@ -38,7 +39,7 @@ public class MarsRoverImpl implements MarsRover {
 
     @Override
     public MarsRover configureLaserRange(int range) {
-        return new MarsRoverImpl(this.position, range, this.obstacle);
+        return new MarsRoverImpl(this.position, Math.max(range, 0), this.obstacle);
     }
 
     @Override
@@ -60,12 +61,16 @@ public class MarsRoverImpl implements MarsRover {
                 case 'r':
                     tmp = turnRight(pos);
                     break;
+                case 's':
+                    shoot(pos);
+                    tmp = pos;
+                    break;
                 default:
                     tmp = pos;
                     break;
             }
-            tmp = getSphericalPos(tmp);
 
+            tmp = getSphericalPos(tmp);
             if (checkIfCanMove(tmp)) {
                 pos = tmp;
             }
@@ -121,12 +126,40 @@ public class MarsRoverImpl implements MarsRover {
     }
 
     private boolean checkIfCanMove(Position pos) {
+        Position tmp = getSphericalPos(pos);
         for (Position obs : this.obstacle) {
-            if (obs.getX() == pos.getX() && obs.getY() == pos.getY()) {
+            Position tmpObs = getSphericalPos(obs);
+            if (tmpObs.getX() == tmp.getX() && tmpObs.getY() == tmp.getY()) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private void shoot(Position pos) {
+        pos = getSphericalPos(pos);
+        int x = pos.getX();
+        int y = pos.getY();
+
+        Direction dir = pos.getDirection();
+        int x_offset = dir == Direction.EAST ? 1 : (dir == Direction.WEST ? -1 : 0);
+        int y_offset = dir == Direction.NORTH ? 1 : (dir == Direction.SOUTH ? -1 : 0);
+
+        for (int c = 0; c < this.laserRange; c++) {
+            x += x_offset;
+            y += y_offset;
+            Position tmp = getSphericalPos(Position.of(x, y, dir));
+
+            Iterator<Position> iter = this.obstacle.iterator();
+            while (iter.hasNext()) {
+                Position tmpObs = getSphericalPos(iter.next());
+
+                if (tmp.getY() == tmpObs.getY() && tmp.getX() == tmpObs.getX()) {
+                    iter.remove();
+                    return;
+                }
+            }
+        }
     }
 }
