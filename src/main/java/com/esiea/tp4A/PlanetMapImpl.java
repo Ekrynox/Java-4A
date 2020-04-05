@@ -46,7 +46,7 @@ public class PlanetMapImpl implements PlanetMap {
         for (y = 0; y < this.size; y++) {
             for (x = 0; x <this.size; x++) {
                 if (map[y][x] == 1) {
-                    positions.add(new Position.FixedPosition(x + offset, y  + offset, null));
+                    positions.add(Position.of(x + offset, y  + offset, null));
                 }
             }
         }

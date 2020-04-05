@@ -64,8 +64,11 @@ public class MarsRoverImpl implements MarsRover {
                     tmp = pos;
                     break;
             }
+            tmp = getSphericalPos(tmp);
 
-            pos = getSphericalPos(tmp);
+            if (checkIfCanMove(tmp)) {
+                pos = tmp;
+            }
         }
 
         return pos;
@@ -115,5 +118,15 @@ public class MarsRoverImpl implements MarsRover {
         y = Math.floorMod(y - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
 
         return Position.of(x, y, pos.getDirection());
+    }
+
+    private boolean checkIfCanMove(Position pos) {
+        for (Position obs : this.obstacle) {
+            if (obs.getX() == pos.getX() && obs.getY() == pos.getY()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
