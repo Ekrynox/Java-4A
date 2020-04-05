@@ -70,10 +70,12 @@ class MarsRoverImplTest {
 
     @ParameterizedTest(name = "{0} ({1}, {2}) {3}")
     @DisplayName("MarsRover Move Obstacle")
-    @CsvSource({"'f', 0, 0, NORTH", "'fflb', 1, 0, WEST", "'rflflf', 1, 1, WEST", "'rflflfrflfrb', 0, 2, NORTH"})
+    @CsvSource({"'f', 0, 0, NORTH", "'fflb', 1, 0, WEST", "'rflflf', 1, 1, WEST", "'rflflfrflfrb', 0, 2, NORTH",
+        "'sf', 0, 1, NORTH", "'fsflb', 1, 1, WEST", "'rflflsf', 0, 1, WEST", "'bbsfff', 0, 0, NORTH"})
     void moveObstacle(String command, int x, int y, Direction dir) {
         MarsRover marsRover = new MarsRoverImpl();
         marsRover = marsRover.initialize(Position.of(0, 0, Direction.NORTH));
+        marsRover = marsRover.configureLaserRange(2);
 
         PlanetMap map = () -> {
             HashSet<Position> map1 = new HashSet<>();
@@ -88,17 +90,17 @@ class MarsRoverImplTest {
         assertEquals(dir, position.getDirection());
     }
 
-    @ParameterizedTest(name = "{0}")
+    @ParameterizedTest(name = "{0}, {1}")
     @DisplayName("MarsRover Configure Laser Range")
-    @CsvSource({"0", "1", "30", "100", "-1"})
-    void configureLaserRange(int range) throws NoSuchFieldException, IllegalAccessException {
+    @CsvSource({"0, 0", "1, 1", "30, 30", "100, 100", "-1, 0"})
+    void configureLaserRange(int range, int erange) throws NoSuchFieldException, IllegalAccessException {
         MarsRover marsRover = new MarsRoverImpl();
         MarsRover newMarsRover = marsRover.configureLaserRange(range);
 
         final Field field = marsRover.getClass().getDeclaredField("laserRange");
         field.setAccessible(true);
 
-        assertEquals(range, field.get(newMarsRover));
+        assertEquals(erange, field.get(newMarsRover));
     }
 
     @Test
