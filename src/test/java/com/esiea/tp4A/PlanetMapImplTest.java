@@ -3,80 +3,70 @@ import com.esiea.tp4A.domain.Position;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Set;
 
 import static java.lang.Math.round;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PlanetMapImplTest {
 
     @Test
-    void mapInitialization(){
-        PlanetMapImpl planetMapImpl = new PlanetMapImpl();
-        int [][] map = planetMapImpl.getMap();
-        for(int x = 0; x < planetMapImpl.getSize(); x++){
-            for(int y =0; y < planetMapImpl.getSize();y++){
-                Assertions.assertThat(map[x][y]).isEqualTo(0);
+    void mapInitialization() throws NoSuchFieldException, IllegalAccessException {
+        PlanetMapImpl map = new PlanetMapImpl();
+
+        Field sizeField = map.getClass().getDeclaredField("size");
+        sizeField.setAccessible(true);
+        int size = sizeField.getInt(map);
+
+        assertFalse(size <= 0);
+
+        Field gridField = map.getClass().getDeclaredField("map");
+        gridField.setAccessible(true);
+        int [][] grid = (int[][]) gridField.get(map);
+
+        assertEquals(size, grid.length);
+        assertEquals(size, grid[0].length);
+
+        int c = 0;
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if (grid[y][x] == 1) {
+                    c++;
+                }
             }
         }
+
+        assertFalse(c + 1 < round(0.15 * size * size));
     }
 
     @Test
+    void obstaclePositions() throws NoSuchFieldException, IllegalAccessException {
+        PlanetMapImpl map = new PlanetMapImpl();
+        Set<Position> obstacle = map.obstaclePositions();
+        Field gridField = map.getClass().getDeclaredField("map");
+        gridField.setAccessible(true);
+        int [][] grid = (int[][]) gridField.get(map);
 
-    void getMap(){
-        PlanetMapImpl planetMap = new PlanetMapImpl();
-        int [][] map = planetMap.getMap();
-        int mapSize = planetMap.getSize();
-        System.out.println(mapSize);
-        planetMap.setTileInfos(10,20,2);
-        planetMap.setTileInfos(5,5,1);
-        int [][] map2 = new int[mapSize][mapSize];
-        map2[10][20]=2;
-        map2[5][5]=1;
-        Assertions.assertThat(map).isEqualTo(map2);
+        int offset = 1 - grid.length / 2;
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid[y].length; x++) {
+                if (grid[y][x] == 1) {
+                    assertNotEquals(0, obstacle.size());
+                    Iterator<Position> iter = obstacle.iterator();
+                    while (iter.hasNext()) {
+                        Position pos = iter.next();
+                        if (pos.getX() == x + offset && pos.getY() == y + offset) {
+                            iter.remove();
+                        }
+                    }
+                }
+            }
+        }
+
+        assertEquals(0, obstacle.size());
     }
-
-    @Test
-
-    void getTileInfos(){
-        PlanetMapImpl planetMap = new PlanetMapImpl();
-        Assertions.assertThat(planetMap.getTileInfos(0,0)).isEqualTo(0);
-        planetMap.setTileInfos(0,0,1);
-        Assertions.assertThat(planetMap.getTileInfos(0,0)).isEqualTo(1);
-        planetMap.setTileInfos(0,0,0);
-        Assertions.assertThat(planetMap.getTileInfos(0,0)).isEqualTo(0);
-    }
-
-
-    @Test
-
-    void setTileInfos(){
-        PlanetMapImpl planetMap = new PlanetMapImpl();
-        Assertions.assertThat(planetMap.getTileInfos(0,0)).isEqualTo(0);
-        planetMap.setTileInfos(0,0,1);
-        Assertions.assertThat(planetMap.getTileInfos(0,0)).isEqualTo(1);
-        planetMap.setTileInfos(0,0,0);
-        Assertions.assertThat(planetMap.getTileInfos(0,0)).isEqualTo(0);
-    }
-
-
-    @Test
-
-    void spawnObstacles(){
-        PlanetMapImpl planetMap = new PlanetMapImpl();
-        planetMap.spawnObstacles();
-        int area = planetMap.getSize()*planetMap.getSize();
-        Set<Position> obstaclesPositions;
-        obstaclesPositions = planetMap.obstaclePositions();
-        Assertions.assertThat(obstaclesPositions.size()).isEqualTo(round(0.15 * area));
-
-    }
-
-    @Test
-
-    void displayMap(){
-        PlanetMapImpl planetMap = new PlanetMapImpl();
-        planetMap.spawnObstacles();
-        planetMap.displayMap();
-    }
-
 }
