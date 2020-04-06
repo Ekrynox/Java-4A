@@ -78,13 +78,10 @@ class MarsRoverImplTest {
         marsRover = marsRover.initialize(Position.of(0, 0, Direction.NORTH));
         marsRover = marsRover.configureLaserRange(2);
 
-        PlanetMap map = () -> {
-            HashSet<Position> map1 = new HashSet<>();
-            map1.add(Position.of(0, 1, null));
-            map1.add(Position.of(-5, 0, null));
-            map1.add(Position.of(-6, 0, null));
-            return map1;
-        };
+        PlanetMapImpl map = new PlanetMapImpl();
+        map.addObstacle(0, 1);
+        map.addObstacle(-5, 0);
+        map.addObstacle(-6, 0);
         marsRover = marsRover.updateMap(map);
 
         Position position = marsRover.move(command);
@@ -121,14 +118,7 @@ class MarsRoverImplTest {
 
         assertEquals(obstacle.size(), tmp.size());
         for (Position obs : obstacle) {
-            Iterator<Position> iter = tmp.iterator();
-            while (iter.hasNext()) {
-                Position pos = iter.next();
-                if (obs.getX() == pos.getX() && obs.getY() == pos.getY() && obs.getDirection() == pos.getDirection()) {
-                    iter.remove();
-                    break;
-                }
-            }
+            tmp.removeIf(pos -> obs.getX() == pos.getX() && obs.getY() == pos.getY() && obs.getDirection() == pos.getDirection());
         }
         assertEquals(0, tmp.size());
     }
