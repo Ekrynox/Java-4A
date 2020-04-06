@@ -1,9 +1,13 @@
 package com.esiea.tp4A;
+
 import com.esiea.tp4A.domain.Position;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -11,61 +15,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlanetMapImplTest {
 
-    @ParameterizedTest(name = "{0} {1}")
-    @CsvSource({"100, 0", "100, 300", "300, 1000", "600, 10000", "100, 90000000"})
-    void mapInitialization(int gridSize, int nbObstacle) throws NoSuchFieldException, IllegalAccessException {
-        PlanetMapImpl map = new PlanetMapImpl(gridSize, nbObstacle);
-
-        Field sizeField = map.getClass().getDeclaredField("size");
-        sizeField.setAccessible(true);
-        int size = sizeField.getInt(map);
-
-        assertEquals(gridSize, size);
-
-        Field gridField = map.getClass().getDeclaredField("map");
-        gridField.setAccessible(true);
-        int [][] grid = (int[][]) gridField.get(map);
-
-        assertEquals(size, grid.length);
-        assertEquals(size, grid[0].length);
-
-        int c = 0;
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                if (grid[y][x] == 1) {
-                    c++;
-                }
-            }
-        }
-
-        assertEquals(Math.min(size * size, nbObstacle), c);
+    @Test
+    void obstaclePositions() throws NoSuchFieldException, IllegalAccessException {
+        PlanetMapImpl map = new PlanetMapImpl();
+        Field field = map.getClass().getDeclaredField("obstacle");
+        field.setAccessible(true);
+        assertEquals(map.obstaclePositions(), field.get(map));
     }
 
-    @ParameterizedTest(name = "{0} {1}")
-    @CsvSource({"100, 0", "100, 300", "300, 1000", "600, 10000", "100, 90000000"})
-    void obstaclePositions(int gridSize, int nbObstacle) throws NoSuchFieldException, IllegalAccessException {
-        PlanetMapImpl map = new PlanetMapImpl(gridSize, nbObstacle);
-        Set<Position> obstacle = map.obstaclePositions();
-        Field gridField = map.getClass().getDeclaredField("map");
-        gridField.setAccessible(true);
-        int [][] grid = (int[][]) gridField.get(map);
+    @Test
+    void addObstacle() {
+        PlanetMapImpl map = new PlanetMapImpl();
+        Set<Position> obs = new HashSet<>();
 
-        int offset = 1 - grid.length / 2;
-        for (int y = 0; y < grid.length; y++) {
-            for (int x = 0; x < grid[y].length; x++) {
-                if (grid[y][x] == 1) {
-                    assertNotEquals(0, obstacle.size());
-                    Iterator<Position> iter = obstacle.iterator();
-                    while (iter.hasNext()) {
-                        Position pos = iter.next();
-                        if (pos.getX() == x + offset && pos.getY() == y + offset) {
-                            iter.remove();
-                        }
-                    }
-                }
+        int c = 0;
+        int x, y;
+        for (int n = 0; n < 1000; n++) {
+            x = (int) (Math.random() * 50);
+            y = (int) (Math.random() * 50);
+
+            obs.add(Position.of(x, y, null));
+
+            if (map.addObstacle(x, y)) {
+                c++;
             }
         }
+        assertEquals(c, map.obstaclePositions().size());
 
-        assertEquals(0, obstacle.size());
+        for (Position pos : map.obstaclePositions()) {
+            obs.removeIf(tmpPos -> tmpPos.getY() == pos.getY() && tmpPos.getX() == pos.getX());
+        }
+
+        assertEquals(0, obs.size());
     }
 }
