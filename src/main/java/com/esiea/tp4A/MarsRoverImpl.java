@@ -13,33 +13,39 @@ public class MarsRoverImpl implements MarsRover {
     private final Position position;
     private final int laserRange;
     private final Set<Position> obstacle;
-    private final int mapSize = 100;
+    private final int mapSize;
 
     public MarsRoverImpl() {
+        this(100);
+    }
+
+    public MarsRoverImpl(int mapSize) {
          this.position = Position.of(0, 0, Direction.NORTH);
          this.laserRange = 0;
          this.obstacle = new HashSet<>();
+         this.mapSize = mapSize;
     }
 
-    public MarsRoverImpl(Position position, int laserRange, Set<Position> obstacle) {
+    public MarsRoverImpl(Position position, int laserRange, Set<Position> obstacle, int mapSize) {
         this.position = position;
         this.laserRange = laserRange;
         this.obstacle = obstacle;
+        this.mapSize = mapSize;
     }
 
     @Override
     public MarsRover initialize(Position position) {
-        return new MarsRoverImpl(position, this.laserRange, this.obstacle);
+        return new MarsRoverImpl(position, this.laserRange, this.obstacle, this.mapSize);
     }
 
     @Override
     public MarsRover updateMap(PlanetMap map) {
-        return new MarsRoverImpl(this.position, this.laserRange, map.obstaclePositions());
+        return new MarsRoverImpl(this.position, this.laserRange, map.obstaclePositions(), this.mapSize);
     }
 
     @Override
     public MarsRover configureLaserRange(int range) {
-        return new MarsRoverImpl(this.position, Math.max(range, 0), this.obstacle);
+        return new MarsRoverImpl(this.position, Math.max(range, 0), this.obstacle, this.mapSize);
     }
 
     @Override
@@ -150,15 +156,8 @@ public class MarsRoverImpl implements MarsRover {
             x += x_offset;
             y += y_offset;
             Position tmp = getSphericalPos(Position.of(x, y, dir));
-
-            Iterator<Position> iter = this.obstacle.iterator();
-            while (iter.hasNext()) {
-                Position tmpObs = getSphericalPos(iter.next());
-
-                if (tmp.getY() == tmpObs.getY() && tmp.getX() == tmpObs.getX()) {
-                    iter.remove();
-                    return;
-                }
+            if (this.obstacle.removeIf(tmpObs -> tmp.getY() == getSphericalPos(tmpObs).getY() && tmp.getX() == getSphericalPos(tmpObs).getX())) {
+                return;
             }
         }
     }
