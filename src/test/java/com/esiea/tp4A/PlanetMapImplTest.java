@@ -1,6 +1,9 @@
 package com.esiea.tp4A;
 import com.esiea.tp4A.domain.Position;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -11,15 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlanetMapImplTest {
 
-    @Test
-    void mapInitialization() throws NoSuchFieldException, IllegalAccessException {
-        PlanetMapImpl map = new PlanetMapImpl();
+    @ParameterizedTest(name = "{0} {1}")
+    @CsvSource({"100, 0", "100, 300", "300, 10000", "600, 100000", "100, 90000000"})
+    void mapInitialization(int gridSize, int nbObstacle) throws NoSuchFieldException, IllegalAccessException {
+        PlanetMapImpl map = new PlanetMapImpl(gridSize, nbObstacle);
 
         Field sizeField = map.getClass().getDeclaredField("size");
         sizeField.setAccessible(true);
         int size = sizeField.getInt(map);
 
-        assertFalse(size <= 0);
+        assertEquals(gridSize, size);
 
         Field gridField = map.getClass().getDeclaredField("map");
         gridField.setAccessible(true);
@@ -37,7 +41,7 @@ class PlanetMapImplTest {
             }
         }
 
-        assertFalse(c + 1 < round(0.15 * size * size));
+        assertEquals(Math.min(size * size, nbObstacle), c);
     }
 
     @Test
