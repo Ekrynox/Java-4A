@@ -1,7 +1,5 @@
 package com.esiea.tp4A;
 import com.esiea.tp4A.domain.Position;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -9,13 +7,12 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Set;
 
-import static java.lang.Math.round;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlanetMapImplTest {
 
     @ParameterizedTest(name = "{0} {1}")
-    @CsvSource({"100, 0", "100, 300", "300, 10000", "600, 100000", "100, 90000000"})
+    @CsvSource({"100, 0", "100, 300", "300, 1000", "600, 10000", "100, 90000000"})
     void mapInitialization(int gridSize, int nbObstacle) throws NoSuchFieldException, IllegalAccessException {
         PlanetMapImpl map = new PlanetMapImpl(gridSize, nbObstacle);
 
@@ -44,9 +41,10 @@ class PlanetMapImplTest {
         assertEquals(Math.min(size * size, nbObstacle), c);
     }
 
-    @Test
-    void obstaclePositions() throws NoSuchFieldException, IllegalAccessException {
-        PlanetMapImpl map = new PlanetMapImpl();
+    @ParameterizedTest(name = "{0} {1}")
+    @CsvSource({"100, 0", "100, 300", "300, 1000", "600, 10000", "100, 90000000"})
+    void obstaclePositions(int gridSize, int nbObstacle) throws NoSuchFieldException, IllegalAccessException {
+        PlanetMapImpl map = new PlanetMapImpl(gridSize, nbObstacle);
         Set<Position> obstacle = map.obstaclePositions();
         Field gridField = map.getClass().getDeclaredField("map");
         gridField.setAccessible(true);
