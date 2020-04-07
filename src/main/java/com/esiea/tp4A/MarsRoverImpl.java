@@ -27,10 +27,10 @@ public class MarsRoverImpl implements MarsRover {
     }
 
     public MarsRoverImpl(Position position, int laserRange, Set<Position> obstacle, int mapSize) {
-        this.position = position;
         this.laserRange = laserRange;
         this.obstacle = obstacle;
         this.mapSize = mapSize;
+        this.position = getSphericalPos(position);
     }
 
     @Override

@@ -22,9 +22,9 @@ public interface Player {
 
     /** Control the rover
      * @param command the actions to do: s: shoot, f: forward, b: backward, l: turn left, r: turn right
-     * @return return the position
+     * @return return the new player instance
      */
-    Position move(String command);
+    Player move(String command);
 
     /** Get the state of the player
      * @return true if the player is alive
