@@ -1,16 +1,28 @@
 package com.esiea.tp4AGame;
 
 import com.esiea.tp4A.PlanetMapImpl;
+import com.esiea.tp4A.domain.MarsRover;
 import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Party;
 import com.esiea.tp4AGame.domain.PlayerController;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class PartyImpl implements Party {
     private final int mapSize;
-    private Set<Position> map;
+    private final Set<Position> map;
+
+    private final Map<String, Player> players;
+    private final Map<String, Player> playersAlive;
+
+    final class Player {
+        Player() {
+
+        }
+    }
 
     public PartyImpl() {
         this(100, new PlanetMapImpl());
@@ -19,21 +31,35 @@ public class PartyImpl implements Party {
     public PartyImpl(int mapSize, PlanetMap map) {
         this.mapSize = mapSize;
         this.map = map.obstaclePositions();
+
+        this.players = new HashMap<>();
+        this.playersAlive = new HashMap<>();
     }
 
     @Override
     public PlayerController addPlayer(String playerName) {
-        return null;
+        if (players.containsKey(playerName) || this.isStarted()) {
+            return null;
+        }
+
+        players.put(playerName, new Player());
+        PlayerController controller = new PlayerControllerImpl();
+        return controller.initialize(this, playerName);
     }
 
     @Override
     public boolean start() {
-        return false;
+        if (this.players.size() < 2 || this.isStarted()) {
+            return false;
+        }
+
+        this.playersAlive.putAll(this.players);
+        return true;
     }
 
     @Override
     public boolean isStarted() {
-        return false;
+        return this.playersAlive.size() > 0;
     }
 
     @Override
