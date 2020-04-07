@@ -15,14 +15,16 @@ public class PartyImpl implements Party {
     private final int mapSize;
     private final Set<Position> map;
 
-    private final int LaserRange;
+    private final int laserRange;
 
     private final Map<String, Player> players;
     private final Map<String, Player> playersAlive;
 
     final class Player {
-        Player() {
+        public final int laserRange;
 
+        Player(int laserRange) {
+            this.laserRange = laserRange;
         }
     }
 
@@ -45,7 +47,7 @@ public class PartyImpl implements Party {
         this.playersAlive = new HashMap<>();
 
         int[] lRange = {5, 30, Integer.MAX_VALUE};
-        this.LaserRange = lRange[new Random().nextInt(lRange.length)];
+        this.laserRange = lRange[new Random().nextInt(lRange.length)];
     }
 
     public PartyImpl(int mapSize, PlanetMap map, int laserRange) {
@@ -55,7 +57,7 @@ public class PartyImpl implements Party {
         this.players = new HashMap<>();
         this.playersAlive = new HashMap<>();
 
-        this.LaserRange = laserRange;
+        this.laserRange = Math.max(laserRange, 0);
     }
 
     @Override
@@ -64,7 +66,7 @@ public class PartyImpl implements Party {
             return null;
         }
 
-        players.put(playerName, new Player());
+        players.put(playerName, new Player(this.laserRange));
         PlayerController controller = new PlayerControllerImpl();
         return controller.initialize(this, playerName);
     }
