@@ -3,6 +3,7 @@ package com.esiea.tp4AGame;
 import com.esiea.tp4A.PlanetMapImpl;
 import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Party;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PartyImplTest {
-    @Test
+    @RepeatedTest(20)
     void addPlayer() {
         Party party1 = new PartyImpl();
         assertNotNull(party1.addPlayer("a"));
@@ -84,7 +85,7 @@ class PartyImplTest {
         assertFalse(party1.getRoverPosition("b").getX() == party1.getRoverPosition("a").getX() && party1.getRoverPosition("b").getY() == party1.getRoverPosition("a").getY());
     }
 
-    @Test
+    @RepeatedTest(20)
     void radar() {
         PlanetMapImpl map = new PlanetMapImpl();
         map.addObstacle(0, 0);
@@ -93,8 +94,12 @@ class PartyImplTest {
         map.addObstacle(-4, 10);
         map.addObstacle(-4, 1);
         map.addObstacle(-9, 3);
+        map.addObstacle(-14, 15);
+        map.addObstacle(-14, -14);
+        map.addObstacle(15, -14);
+        map.addObstacle(15, 15);
 
-        Party party1 = new PartyImpl(20, map, 5);
+        Party party1 = new PartyImpl(30, map, 0);
         party1.addPlayer("a");
         party1.addPlayer("b");
         party1.addPlayer("c");
