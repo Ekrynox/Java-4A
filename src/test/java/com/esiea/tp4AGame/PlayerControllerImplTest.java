@@ -1,11 +1,8 @@
 package com.esiea.tp4AGame;
 
-import com.esiea.tp4A.PlanetMapImpl;
 import com.esiea.tp4A.domain.Direction;
-import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
-import com.esiea.tp4AGame.domain.Player;
-import org.junit.jupiter.api.DisplayName;
+import com.esiea.tp4AGame.domain.PlayerController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -15,12 +12,12 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlayerImplTest {
+class PlayerControllerImplTest {
 
     @ParameterizedTest(name = "{0} ({1}, {2})")
     @CsvSource({"0, 0, NORTH", "2, 29, SOUTH", "4, 6, EAST", "7, 16, WEST", "-9, 19, NORTH"})
     void getRoverPosition(int x, int y, Direction dir) {
-        Player player = new PlayerImpl(Position.of(x, y, dir), 0, new HashSet<>(), 100);
+        PlayerController player = new PlayerControllerImpl(Position.of(x, y, dir), 0, new HashSet<>(), 100);
         Position pos = player.getRoverPosition();
         assertEquals(x, pos.getX());
         assertEquals(y, pos.getY());
@@ -37,7 +34,7 @@ class PlayerImplTest {
         map.add(Position.of(0, 31, Direction.SOUTH));
         map.add(Position.of(22, 22, Direction.SOUTH));
 
-        Player player = new PlayerImpl(Position.of(0, 0, Direction.WEST), 0, map, 100);
+        PlayerController player = new PlayerControllerImpl(Position.of(0, 0, Direction.WEST), 0, map, 100);
         Set<Position> tmp = player.radar();
 
         map.removeIf(pos -> Math.pow(pos.getX(), 2) + Math.pow(pos.getY(), 2) > 900);
@@ -53,7 +50,15 @@ class PlayerImplTest {
     @ParameterizedTest(name = "{0} {1}")
     @CsvSource({"0, 0", "-1, 0", "10, 10", "9565, 9565", "-900, 0"})
     void getLaserRange(int range, int erange) {
-        Player player = new PlayerImpl(Position.of(0, 0, Direction.NORTH), range, new HashSet<>(), 100);
+        PlayerController player = new PlayerControllerImpl(Position.of(0, 0, Direction.NORTH), range, new HashSet<>(), 100);
         assertEquals(erange, player.getLaserRange());
+    }
+
+    @Test
+    void move() {
+    }
+
+    @Test
+    void isAlive() {
     }
 }
