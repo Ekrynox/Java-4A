@@ -5,15 +5,29 @@ import com.esiea.tp4A.domain.Position;
 import java.util.Set;
 
 public interface Player {
+    /** Get the position of the rover
+     * @return the actual position of the rover, return the last position if the rover have been destroyed
+     */
     Position getRoverPosition();
 
-    Set<Position> radar(); // Obstacle have a null Direction
+    /** Get the list of obstacles and players around the player
+     * @return the list of the position, if the direction is null, it is an obstacle, else it is a player
+     */
+    Set<Position> radar();
 
+    /** Get the laser's range
+     * @return the laser's range
+     */
     int getLaserRange();
 
+    /** Control the rover
+     * @param command the actions to do: s: shoot, f: forward, b: backward, l: turn left, r: turn right
+     * @return return the position
+     */
     Position move(String command);
 
-    boolean shoot();
-
+    /** Get the state of the player
+     * @return true if the player is alive
+     */
     boolean isAlive();
 }
