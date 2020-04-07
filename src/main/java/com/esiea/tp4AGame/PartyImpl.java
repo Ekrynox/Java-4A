@@ -103,7 +103,11 @@ public class PartyImpl implements Party {
 
     @Override
     public int getLaserRange(String playerName) {
-        return 0;
+        if (!this.players.containsKey(playerName)) {
+            return 0;
+        }
+
+        return this.players.get(playerName).laserRange;
     }
 
     @Override
