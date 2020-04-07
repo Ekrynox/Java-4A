@@ -3,12 +3,13 @@ package com.esiea.tp4AGame;
 import com.esiea.tp4A.MarsRoverImpl;
 import com.esiea.tp4A.domain.MarsRover;
 import com.esiea.tp4A.domain.Position;
-import com.esiea.tp4AGame.domain.Player;
+import com.esiea.tp4AGame.domain.Party;
+import com.esiea.tp4AGame.domain.PlayerController;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class PlayerImpl implements Player {
+public class PlayerControllerImpl implements PlayerController {
     private final Set<Position> map;
     private final int mapSize;
 
@@ -16,7 +17,7 @@ public class PlayerImpl implements Player {
     private final Position position;
     private final int laserRange;
 
-    public PlayerImpl(Position position, int laserRange, Set<Position> map, int mapSize) {
+    public PlayerControllerImpl(Position position, int laserRange, Set<Position> map, int mapSize) {
         this.mapSize = mapSize;
         this.map = map;
 
@@ -26,6 +27,11 @@ public class PlayerImpl implements Player {
         this.position = getSphericalPos(position);
 
         this.map.add(this.position);
+    }
+
+    @Override
+    public PlayerController initialize(Party party, String playerName) {
+        return null;
     }
 
     @Override
@@ -50,7 +56,7 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public Player move(String command) {
+    public Position move(String command) {
         return null;
     }
 
