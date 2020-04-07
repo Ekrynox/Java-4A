@@ -2,7 +2,6 @@ package com.esiea.tp4AGame;
 
 import com.esiea.tp4A.MarsRoverImpl;
 import com.esiea.tp4A.domain.MarsRover;
-import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Player;
 
@@ -19,7 +18,7 @@ public class PlayerImpl implements Player {
         this.mapSize = mapSize;
         this.map = map;
 
-        this.laserRange = laserRange;
+        this.laserRange = Math.max(laserRange, 0);
 
         this.rover = new MarsRoverImpl(position, laserRange, map, mapSize);
         this.position = getSphericalPos(position);
@@ -36,7 +35,7 @@ public class PlayerImpl implements Player {
 
     @Override
     public Position getRoverPosition() {
-        return null;
+        return this.position;
     }
 
     @Override
@@ -46,7 +45,7 @@ public class PlayerImpl implements Player {
 
     @Override
     public int getLaserRange() {
-        return 0;
+        return this.laserRange;
     }
 
     @Override
