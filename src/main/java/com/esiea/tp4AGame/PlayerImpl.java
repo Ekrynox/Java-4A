@@ -5,6 +5,7 @@ import com.esiea.tp4A.domain.MarsRover;
 import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Player;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class PlayerImpl implements Player {
@@ -40,7 +41,13 @@ public class PlayerImpl implements Player {
 
     @Override
     public Set<Position> radar() {
-        return null;
+        Set<Position> tmp = new HashSet<>();
+        for (Position obs : this.map) {
+            if (Math.pow(getSphericalPos(obs).getX(), 2) + Math.pow(getSphericalPos(obs).getY(), 2) <= 900) {
+                tmp.add(obs);
+            }
+        }
+        return tmp;
     }
 
     @Override
