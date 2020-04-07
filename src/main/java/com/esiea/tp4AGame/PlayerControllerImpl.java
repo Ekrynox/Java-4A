@@ -10,49 +10,38 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PlayerControllerImpl implements PlayerController {
-    private final Set<Position> map;
-    private final int mapSize;
+    private final Party party;
+    private final String playerName;
 
-    private final MarsRover rover;
-    private final Position position;
-    private final int laserRange;
 
-    public PlayerControllerImpl(Position position, int laserRange, Set<Position> map, int mapSize) {
-        this.mapSize = mapSize;
-        this.map = map;
+    private PlayerControllerImpl(Party party, String playerName) {
+        this.party = party;
+        this.playerName = playerName;
+    }
 
-        this.laserRange = Math.max(laserRange, 0);
-
-        this.rover = new MarsRoverImpl(position, laserRange, map, mapSize);
-        this.position = getSphericalPos(position);
-
-        this.map.add(this.position);
+    public PlayerControllerImpl() {
+        this.party = null;
+        this.playerName = null;
     }
 
     @Override
     public PlayerController initialize(Party party, String playerName) {
-        return null;
+        return new PlayerControllerImpl(party, playerName);
     }
 
     @Override
     public Position getRoverPosition() {
-        return this.position;
+        return null;
     }
 
     @Override
     public Set<Position> radar() {
-        Set<Position> tmp = new HashSet<>();
-        for (Position obs : this.map) {
-            if (Math.pow(getSphericalPos(obs).getX(), 2) + Math.pow(getSphericalPos(obs).getY(), 2) <= 900) {
-                tmp.add(obs);
-            }
-        }
-        return tmp;
+        return null;
     }
 
     @Override
     public int getLaserRange() {
-        return this.laserRange;
+        return 0;
     }
 
     @Override
@@ -63,15 +52,5 @@ public class PlayerControllerImpl implements PlayerController {
     @Override
     public boolean isAlive() {
         return false;
-    }
-
-    private Position getSphericalPos(Position pos) {
-        int x = pos.getX();
-        int y = pos.getY();
-
-        x = Math.floorMod(x - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
-        y = Math.floorMod(y - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
-
-        return Position.of(x, y, pos.getDirection());
     }
 }
