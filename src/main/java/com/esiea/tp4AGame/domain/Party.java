@@ -21,11 +21,6 @@ public interface Party {
      */
     boolean isStarted();
 
-    /** Get the name of all alive players
-     * @return A list of the players
-     */
-    Set<String> getAlivePlayers();
-
     /** Get the state of the game
      * @return the name of the winner, if empty string the game is not finished
      */

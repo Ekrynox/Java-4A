@@ -27,6 +27,8 @@ class PartyImplTest {
 
         party1.addPlayer("aa");
         assertTrue(party1.start());
+        
+        assertFalse(party1.start());
     }
 
     @Test
