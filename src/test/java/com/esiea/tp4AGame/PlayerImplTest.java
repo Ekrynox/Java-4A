@@ -50,4 +50,10 @@ class PlayerImplTest {
         assertEquals(0, player.radar().size());
     }
 
+    @ParameterizedTest(name = "{0} {1}")
+    @CsvSource({"0, 0", "-1, 0", "10, 10", "9565, 9565", "-900, 0"})
+    void getLaserRange(int range, int erange) {
+        Player player = new PlayerImpl(Position.of(0, 0, Direction.NORTH), range, new HashSet<>(), 100);
+        assertEquals(erange, player.getLaserRange());
+    }
 }
