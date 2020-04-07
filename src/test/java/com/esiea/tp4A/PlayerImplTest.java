@@ -4,6 +4,7 @@ public class PlayerImplTest {
     private String name = "Spadabi";
     private double health = 50;
     private double range = 3.5;
+    private double attack = 1.5;
 
     PlayerImplTest(){
 
@@ -33,5 +34,13 @@ public class PlayerImplTest {
 
     public void setRange(double range) {
         this.range = range;
+    }
+
+    public double getAttack() {
+        return attack;
+    }
+
+    public void setAttack(double attack) {
+        this.attack = attack;
     }
 }
