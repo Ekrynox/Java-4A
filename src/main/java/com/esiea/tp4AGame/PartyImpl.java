@@ -1,15 +1,13 @@
 package com.esiea.tp4AGame;
 
 import com.esiea.tp4A.PlanetMapImpl;
+import com.esiea.tp4A.domain.Direction;
 import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Party;
 import com.esiea.tp4AGame.domain.PlayerController;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class PartyImpl implements Party {
     private final int mapSize;
@@ -22,9 +20,11 @@ public class PartyImpl implements Party {
 
     final class Player {
         public final int laserRange;
+        public final Position position;
 
-        Player(int laserRange) {
+        Player(int laserRange, Position position) {
             this.laserRange = laserRange;
+            this.position = position;
         }
     }
 
@@ -62,11 +62,28 @@ public class PartyImpl implements Party {
 
     @Override
     public PlayerController addPlayer(String playerName) {
-        if (players.containsKey(playerName) || this.isStarted()) {
+        if (players.containsKey(playerName) || this.isStarted() || this.mapSize * this.mapSize <= this.map.size()) {
             return null;
         }
 
-        players.put(playerName, new Player(this.laserRange));
+        int x = 0, y = 0;
+        boolean ok = false;
+        while (!ok) {
+            x = (int) Math.round(Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
+            y = (int) Math.round(Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
+            ok = true;
+            for (Position pos : this.map) {
+                if (pos.getY() == y && pos.getX() == x) {
+                    ok = false;
+                    break;
+                }
+            }
+        }
+
+        Direction[] d = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+        Position pos = Position.of(x, y, d[new Random().nextInt(d.length)]);
+        this.map.add(pos);
+        players.put(playerName, new Player(this.laserRange, pos));
         PlayerController controller = new PlayerControllerImpl();
         return controller.initialize(this, playerName);
     }
@@ -93,7 +110,11 @@ public class PartyImpl implements Party {
 
     @Override
     public Position getRoverPosition(String playerName) {
-        return null;
+        if (!this.players.containsKey(playerName)) {
+            return null;
+        }
+
+        return this.players.get(playerName).position;
     }
 
     @Override
