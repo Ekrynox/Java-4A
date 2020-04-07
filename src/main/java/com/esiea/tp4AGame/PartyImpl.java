@@ -119,7 +119,30 @@ public class PartyImpl implements Party {
 
     @Override
     public Set<Position> radar(String playerName) {
-        return null;
+        if (!this.players.containsKey(playerName)) {
+            return null;
+        }
+
+        Position pos = this.getRoverPosition(playerName);
+        int x = pos.getX();
+        int y = pos.getY();
+        Set<Position> tmp = new HashSet<>();
+        for (Position obs : this.map) {
+            int obsX = obs.getX();
+            int obsY = obs.getY();
+            if (x != obsX || y != obsY) {
+                if (Math.abs(x - obsX) <= 15 && Math.abs(y - obsY) <= 15) {
+                    tmp.add(obs);
+                } else if (Math.abs(x - obsX) <= 15 && Math.abs(y - obsY - this.mapSize) <= 15) {
+                    tmp.add(obs);
+                } else if (Math.abs(x - obsX - this.mapSize) <= 15 && Math.abs(y - obsY) <= 15) {
+                    tmp.add(obs);
+                } else if (Math.abs(x - obsX - this.mapSize) <= 15 && Math.abs(y - obsY - this.mapSize) <= 15) {
+                    tmp.add(obs);
+                }
+            }
+        }
+        return tmp;
     }
 
     @Override

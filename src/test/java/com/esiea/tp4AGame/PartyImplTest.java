@@ -1,8 +1,11 @@
 package com.esiea.tp4AGame;
 
 import com.esiea.tp4A.PlanetMapImpl;
+import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Party;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -79,5 +82,42 @@ class PartyImplTest {
         assertNull(party1.getRoverPosition("b"));
         party1.addPlayer("b");
         assertFalse(party1.getRoverPosition("b").getX() == party1.getRoverPosition("a").getX() && party1.getRoverPosition("b").getY() == party1.getRoverPosition("a").getY());
+    }
+
+    @Test
+    void radar() {
+        PlanetMapImpl map = new PlanetMapImpl();
+        map.addObstacle(0, 0);
+        map.addObstacle(-5, 4);
+        map.addObstacle(-3, 0);
+        map.addObstacle(-4, 10);
+        map.addObstacle(-4, 1);
+        map.addObstacle(-9, 3);
+
+        Party party1 = new PartyImpl(20, map, 5);
+        party1.addPlayer("a");
+        party1.addPlayer("b");
+        party1.addPlayer("c");
+        party1.addPlayer("d");
+        assertNull(party1.radar("e"));
+        assertNotNull(party1.radar("a"));
+
+        Set<Position> tmp = party1.radar("a");
+        assertEquals(map.obstaclePositions().size() - 1, tmp.size());
+
+        for (Position pos : map.obstaclePositions()) {
+            tmp.removeIf(tmpPos -> pos.getX() == tmpPos.getX() && pos.getY() == tmpPos.getY() && pos.getDirection() == tmpPos.getDirection() && pos.getDirection() == null);
+        }
+        assertEquals(3, tmp.size());
+
+        Position tmpPos = party1.getRoverPosition("a");
+        for (Position pos : tmp) {
+            assertFalse(pos.getX() == tmpPos.getX() && pos.getY() == tmpPos.getY() && pos.getDirection() == tmpPos.getDirection());
+            assertNotNull(pos.getDirection());
+        }
+    }
+
+    @Test
+    void isAlive() {
     }
 }
