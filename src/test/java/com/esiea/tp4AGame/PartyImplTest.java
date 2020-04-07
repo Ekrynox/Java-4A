@@ -120,6 +120,21 @@ class PartyImplTest {
             assertFalse(pos.getX() == tmpPos.getX() && pos.getY() == tmpPos.getY() && pos.getDirection() == tmpPos.getDirection());
             assertNotNull(pos.getDirection());
         }
+
+        PlanetMapImpl map2 = new PlanetMapImpl();
+        map.addObstacle(0, 0);
+        map.addObstacle(-45, 40);
+        map.addObstacle(-30, 0);
+        map.addObstacle(-4, 10);
+        map.addObstacle(-12, 18);
+        map.addObstacle(-29, 3);
+        map.addObstacle(-14, 45);
+        map.addObstacle(-14, -24);
+        map.addObstacle(25, 24);
+        map.addObstacle(15, 15);
+        Party party2 = new PartyImpl(100, map2, 0);
+        party2.addPlayer("a");
+        assertNotEquals(map2.obstaclePositions().size(), party2.radar("a"));
     }
 
     @Test
