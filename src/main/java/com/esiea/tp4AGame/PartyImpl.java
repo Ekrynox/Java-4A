@@ -37,8 +37,8 @@ public class PartyImpl implements Party {
         int x, y;
         for (int n = 0; n < nbObs; n++) {
             do {
-                x = (int) Math.round(Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
-                y = (int) Math.round(Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
+                x = (int) (Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
+                y = (int) (Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
             } while(!m.addObstacle(x, y));
         }
         this.map = m.obstaclePositions();
@@ -69,8 +69,8 @@ public class PartyImpl implements Party {
         int x = 0, y = 0;
         boolean ok = false;
         while (!ok) {
-            x = (int) Math.round(Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
-            y = (int) Math.round(Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
+            x = (int) (Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
+            y = (int) (Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
             ok = true;
             for (Position pos : this.map) {
                 if (pos.getY() == y && pos.getX() == x) {
@@ -133,11 +133,11 @@ public class PartyImpl implements Party {
             if (x != obsX || y != obsY) {
                 if (Math.abs(x - obsX) <= 15 && Math.abs(y - obsY) <= 15) {
                     tmp.add(obs);
-                } else if (Math.abs(x - obsX) <= 15 && Math.abs(y - obsY - this.mapSize) <= 15) {
+                } else if (Math.abs(x - obsX) <= 15 && Math.abs(y - obsY + (y < obsY ? 1 : -1 ) * this.mapSize) <= 15) {
                     tmp.add(obs);
-                } else if (Math.abs(x - obsX - this.mapSize) <= 15 && Math.abs(y - obsY) <= 15) {
+                } else if (Math.abs(x - obsX + (x < obsX ? 1 : -1 ) * this.mapSize) <= 15 && Math.abs(y - obsY) <= 15) {
                     tmp.add(obs);
-                } else if (Math.abs(x - obsX - this.mapSize) <= 15 && Math.abs(y - obsY - this.mapSize) <= 15) {
+                } else if (Math.abs(x - obsX + (x < obsX ? 1 : -1 ) * this.mapSize) <= 15 && Math.abs(y - obsY + (y < obsY ? 1 : -1 ) * this.mapSize) <= 15) {
                     tmp.add(obs);
                 }
             }
