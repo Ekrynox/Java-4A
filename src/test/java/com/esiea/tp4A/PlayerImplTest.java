@@ -5,6 +5,7 @@ public class PlayerImplTest {
     private double health = 50;
     private double range = 3.5;
     private double attack = 1.5;
+    private double defense = 1.5;
 
     PlayerImplTest(){
 
@@ -42,5 +43,13 @@ public class PlayerImplTest {
 
     public void setAttack(double attack) {
         this.attack = attack;
+    }
+
+    public double getDefense() {
+        return defense;
+    }
+
+    public void setDefense(double defense) {
+        this.defense = defense;
     }
 }
