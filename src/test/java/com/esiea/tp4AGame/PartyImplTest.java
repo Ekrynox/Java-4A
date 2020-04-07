@@ -11,6 +11,10 @@ class PartyImplTest {
         Party party1 = new PartyImpl();
         assertNotNull(party1.addPlayer("a"));
         assertNull(party1.addPlayer("a"));
+        assertNotNull(party1.addPlayer("b"));
+
+        party1.start();
+        assertNull(party1.addPlayer("c"));
     }
 
     @Test
