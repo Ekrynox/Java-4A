@@ -9,11 +9,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PlayerImpl implements Player {
-    private final int mapSize;
     private final Set<Position> map;
+    private final int mapSize;
+
     private final MarsRover rover;
-    private final int laserRange;
     private final Position position;
+    private final int laserRange;
 
     public PlayerImpl(Position position, int laserRange, Set<Position> map, int mapSize) {
         this.mapSize = mapSize;
@@ -24,14 +25,7 @@ public class PlayerImpl implements Player {
         this.rover = new MarsRoverImpl(position, laserRange, map, mapSize);
         this.position = getSphericalPos(position);
 
-        for (Position pos : this.map) {
-            Position tmp = getSphericalPos(pos);
-            if (tmp.getX() == this.position.getX() && tmp.getY() == this.position.getY() && tmp.getDirection() == this.position.getDirection()) {
-                return;
-            }
-        }
-
-        this.map.add(position);
+        this.map.add(this.position);
     }
 
     @Override
