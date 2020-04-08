@@ -179,7 +179,10 @@ class PartyImplTest {
         assertTrue(party.isAlive("b"));
 
         Position pos = party.getRoverPosition("a");
-        assertEquals(pos, party.move("a", "s"));
+        assertEquals(pos, party.move("a", "f"));
+
+        pos = party.getRoverPosition("b");
+        assertEquals(pos, party.move("b", "f"));
     }
 
     private int floorPos(int x, int mapSize) {
