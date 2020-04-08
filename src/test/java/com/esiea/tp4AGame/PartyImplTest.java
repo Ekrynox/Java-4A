@@ -177,6 +177,9 @@ class PartyImplTest {
         party.move("a", "s");
         assertFalse(party.isAlive("a"));
         assertTrue(party.isAlive("b"));
+
+        Position pos = party.getRoverPosition("a");
+        assertEquals(pos, party.move("a", "s"));
     }
 
     private int floorPos(int x, int mapSize) {
@@ -230,5 +233,33 @@ class PartyImplTest {
         assertEquals(pos2.getX(), pos1.getX());
         assertEquals(pos2.getY(), pos1.getY());
         assertEquals(pos2.getDirection(), pos1.getDirection());
+    }
+
+    @RepeatedTest(50)
+    void getWinner() {
+        Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
+        assertEquals("", party.getWinner());
+        party.addPlayer("a");
+        assertEquals("", party.getWinner());
+        party.addPlayer("b");
+        assertEquals("", party.getWinner());
+
+        party.start();
+        assertEquals("", party.getWinner());
+
+        Position posA = party.getRoverPosition("a");
+        Position posB = party.getRoverPosition("b");
+
+        if (posA.getDirection() == Direction.WEST || posA.getDirection() == Direction.EAST) {
+            if (posA.getY() == posB.getY()) {
+                party.move("a", "r");
+            }
+        } else if (posA.getDirection() == Direction.SOUTH || posA.getDirection() == Direction.NORTH) {
+            if (posA.getX() == posB.getX()) {
+                party.move("a", "r");
+            }
+        }
+        party.move("a", "s");
+        assertEquals("b", party.getWinner());
     }
 }
