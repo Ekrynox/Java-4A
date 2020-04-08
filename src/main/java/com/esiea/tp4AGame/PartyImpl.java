@@ -129,7 +129,15 @@ public class PartyImpl implements Party {
 
     @Override
     public String getWinner() {
-        return null;
+        if (!this.isStarted()) {
+            return "";
+        }
+
+        if (this.playersAlive.size() > 1) {
+            return "";
+        }
+
+        return this.playersAlive.entrySet().iterator().next().getKey();
     }
 
     @Override
