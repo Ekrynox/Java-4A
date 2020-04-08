@@ -15,7 +15,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PartyImplTest {
-    @RepeatedTest(50)
+    @RepeatedTest(1000)
     void addPlayer() {
         Party party1 = new PartyImpl();
         assertNotNull(party1.addPlayer("a"));
@@ -79,7 +79,7 @@ class PartyImplTest {
         assertEquals(Integer.MAX_VALUE, party4.getLaserRange("a"));
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(1000)
     void getRoverPosition() {
         Party party1 = new PartyImpl(100, new PlanetMapImpl(), 5);
         party1.addPlayer("a");
@@ -90,7 +90,7 @@ class PartyImplTest {
         assertFalse(party1.getRoverPosition("b").getX() == party1.getRoverPosition("a").getX() && party1.getRoverPosition("b").getY() == party1.getRoverPosition("a").getY());
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(1000)
     void radar() {
         PlanetMapImpl map = new PlanetMapImpl();
         map.addObstacle(0, 0);
@@ -149,7 +149,7 @@ class PartyImplTest {
         assertNotEquals(map2.obstaclePositions().size(), party2.radar("a"));
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(1000)
     void isAlive() {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         assertFalse(party.isAlive("a"));
@@ -186,9 +186,10 @@ class PartyImplTest {
         return Math.floorMod(x - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(1000)
     void move() {
-        Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
+        PlanetMapImpl map = new PlanetMapImpl();
+        Party party = new PartyImpl(10, map, Integer.MAX_VALUE);
         assertNull(party.move("a", "f"));
         party.addPlayer("a");
         Position pos1 = party.getRoverPosition("a");
@@ -201,9 +202,8 @@ class PartyImplTest {
         party.start();
 
         pos2 = party.getRoverPosition("b");
-        while (Math.pow(pos2.getY() - pos1.getY(), 2) + Math.pow(pos2.getX() - pos1.getX(), 2) < 25) {
-            pos2 = party.move("b", "flfr");
-        }
+        Position finalPos = pos2;
+        map.obstaclePositions().removeIf(tmpPos -> tmpPos.getX() == finalPos.getX() && tmpPos.getY() == finalPos.getY() && tmpPos.getDirection() == finalPos.getDirection());
 
         pos2 = party.move("a", "frf");
         switch (pos1.getDirection()) {
@@ -235,7 +235,7 @@ class PartyImplTest {
         assertEquals(pos2.getDirection(), pos1.getDirection());
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(1000)
     void getWinner() {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         assertEquals("", party.getWinner());
