@@ -192,7 +192,7 @@ public class PartyImpl implements Party {
             return null;
         }
 
-        if (!this.playersAlive.containsKey(playerName) || !this.isStarted()) {
+        if (!this.playersAlive.containsKey(playerName) || !this.getWinner().equals("")) {
             return this.getRoverPosition(playerName);
         }
 
