@@ -1,12 +1,9 @@
 package com.esiea.tp4AGame;
 
-import com.esiea.tp4A.MarsRoverImpl;
-import com.esiea.tp4A.domain.MarsRover;
 import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Party;
 import com.esiea.tp4AGame.domain.PlayerController;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class PlayerControllerImpl implements PlayerController {
@@ -31,26 +28,41 @@ public class PlayerControllerImpl implements PlayerController {
 
     @Override
     public Position getRoverPosition() {
-        return null;
+        if (this.party == null) {
+            return null;
+        }
+        return this.party.getRoverPosition(this.playerName);
     }
 
     @Override
     public Set<Position> radar() {
-        return null;
+        if (this.party == null) {
+            return null;
+        }
+        return this.party.radar(this.playerName);
     }
 
     @Override
     public int getLaserRange() {
-        return 0;
+        if (this.party == null) {
+            return 0;
+        }
+        return this.party.getLaserRange(this.playerName);
     }
 
     @Override
     public Position move(String command) {
-        return null;
+        if (this.party == null) {
+            return null;
+        }
+        return this.party.move(this.playerName, command);
     }
 
     @Override
     public boolean isAlive() {
-        return false;
+        if (this.party == null) {
+            return false;
+        }
+        return this.party.isAlive(this.playerName);
     }
 }
