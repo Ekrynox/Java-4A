@@ -6,6 +6,9 @@ import com.esiea.tp4AGame.domain.Party;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -121,17 +124,24 @@ class PartyImplTest {
             assertNotNull(pos.getDirection());
         }
 
+
         PlanetMapImpl map2 = new PlanetMapImpl();
-        map.addObstacle(0, 0);
-        map.addObstacle(-45, 40);
-        map.addObstacle(-30, 0);
-        map.addObstacle(-4, 10);
-        map.addObstacle(-12, 18);
-        map.addObstacle(-29, 3);
-        map.addObstacle(-14, 45);
-        map.addObstacle(-14, -24);
-        map.addObstacle(25, 24);
-        map.addObstacle(15, 15);
+        tmp = map2.obstaclePositions();
+
+        int N = 100*100;
+        int nbObs = (int)Math.round(N * 0.15);
+        ArrayList<Integer> mapGen = new ArrayList<>(Collections.nCopies(N, 0));
+        for (int n = 0; n < nbObs; n++) {
+            mapGen.set(n, 1);
+        }
+
+        Collections.shuffle(mapGen, new Random());
+        int offset = 1 - 100 / 2;
+        for(int n = 0; n < mapGen.size(); n++) {
+            if (mapGen.get(n) == 1) {
+                tmp.add(Position.of(n % 100 + offset, n / 100 + offset, null));
+            }
+        }
         Party party2 = new PartyImpl(100, map2, 0);
         party2.addPlayer("a");
         assertNotEquals(map2.obstaclePositions().size(), party2.radar("a"));
