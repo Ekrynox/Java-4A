@@ -6,7 +6,6 @@ import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class MarsRoverImpl implements MarsRover {
@@ -56,29 +55,28 @@ public class MarsRoverImpl implements MarsRover {
         for (char c : command.toCharArray()) {
             switch (c) {
                 case 'f':
-                    tmp = goForward(pos);
+                    tmp = getSphericalPos(goForward(pos));
+                    if (checkIfCanMove(tmp)) {
+                        pos = tmp;
+                    }
                     break;
                 case 'b':
-                    tmp = goBackward(pos);
+                    tmp = getSphericalPos(goBackward(pos));
+                    if (checkIfCanMove(tmp)) {
+                        pos = tmp;
+                    }
                     break;
                 case 'l':
-                    tmp = turnLeft(pos);
+                    pos = turnLeft(pos);
                     break;
                 case 'r':
-                    tmp = turnRight(pos);
+                    pos = turnRight(pos);
                     break;
                 case 's':
                     shoot(pos);
-                    tmp = pos;
                     break;
                 default:
-                    tmp = pos;
                     break;
-            }
-
-            tmp = getSphericalPos(tmp);
-            if (checkIfCanMove(tmp)) {
-                pos = tmp;
             }
         }
 
@@ -122,11 +120,8 @@ public class MarsRoverImpl implements MarsRover {
     }
 
     private Position getSphericalPos(Position pos) {
-        int x = pos.getX();
-        int y = pos.getY();
-
-        x = Math.floorMod(x - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
-        y = Math.floorMod(y - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
+        int x = Math.floorMod(pos.getX() - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
+        int y = Math.floorMod(pos.getY() - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
 
         return Position.of(x, y, pos.getDirection());
     }
