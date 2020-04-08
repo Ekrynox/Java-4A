@@ -15,7 +15,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PartyImplTest {
-    @RepeatedTest(1000)
+    @RepeatedTest(100)
     void addPlayer() {
         Party party1 = new PartyImpl();
         assertNotNull(party1.addPlayer("a"));
@@ -79,7 +79,7 @@ class PartyImplTest {
         assertEquals(Integer.MAX_VALUE, party4.getLaserRange("a"));
     }
 
-    @RepeatedTest(1000)
+    @RepeatedTest(100)
     void getRoverPosition() {
         Party party1 = new PartyImpl(100, new PlanetMapImpl(), 5);
         party1.addPlayer("a");
@@ -90,7 +90,7 @@ class PartyImplTest {
         assertFalse(party1.getRoverPosition("b").getX() == party1.getRoverPosition("a").getX() && party1.getRoverPosition("b").getY() == party1.getRoverPosition("a").getY());
     }
 
-    @RepeatedTest(1000)
+    @RepeatedTest(100)
     void radar() {
         PlanetMapImpl map = new PlanetMapImpl();
         map.addObstacle(0, 0);
@@ -149,7 +149,7 @@ class PartyImplTest {
         assertNotEquals(map2.obstaclePositions().size(), party2.radar("a"));
     }
 
-    @RepeatedTest(1000)
+    @RepeatedTest(100)
     void isAlive() {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         assertFalse(party.isAlive("a"));
@@ -186,7 +186,7 @@ class PartyImplTest {
         return Math.floorMod(x - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
     }
 
-    @RepeatedTest(1000)
+    @RepeatedTest(100)
     void move() {
         PlanetMapImpl map = new PlanetMapImpl();
         Party party = new PartyImpl(10, map, Integer.MAX_VALUE);
@@ -235,7 +235,7 @@ class PartyImplTest {
         assertEquals(pos2.getDirection(), pos1.getDirection());
     }
 
-    @RepeatedTest(1000)
+    @RepeatedTest(100)
     void getWinner() {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         assertEquals("", party.getWinner());
