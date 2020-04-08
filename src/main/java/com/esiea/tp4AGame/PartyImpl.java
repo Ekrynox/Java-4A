@@ -1,6 +1,5 @@
 package com.esiea.tp4AGame;
 
-import com.esiea.tp4A.PlanetMapImpl;
 import com.esiea.tp4A.domain.Direction;
 import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
@@ -32,16 +31,22 @@ public class PartyImpl implements Party {
         int[] mSize = {100, 300, 600};
         this.mapSize = mSize[new Random().nextInt(mSize.length)];
 
-        PlanetMapImpl m = new PlanetMapImpl();
-        int nbObs = (int)Math.round(this.mapSize * this.mapSize * 0.01);
-        int x, y;
+        this.map = new HashSet<>();
+
+        int N = this.mapSize * this.mapSize;
+        int nbObs = (int)Math.round(N * 0.15);
+        ArrayList<Integer> mapGen = new ArrayList<>(Collections.nCopies(N, 0));
         for (int n = 0; n < nbObs; n++) {
-            do {
-                x = (int) (Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
-                y = (int) (Math.random() * this.mapSize) + 1 - (this.mapSize / 2);
-            } while(!m.addObstacle(x, y));
+            mapGen.set(n, 1);
         }
-        this.map = m.obstaclePositions();
+
+        Collections.shuffle(mapGen, new Random());
+        int offset = 1 - this.mapSize / 2;
+        for(int n = 0; n < mapGen.size(); n++) {
+            if (mapGen.get(n) == 1) {
+                this.map.add(Position.of(n % this.mapSize + offset, n / this.mapSize + offset, null));
+            }
+        }
 
         this.players = new HashMap<>();
         this.playersAlive = new HashMap<>();
