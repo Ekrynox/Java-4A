@@ -1,6 +1,7 @@
 package com.esiea.tp4AGame;
 
 import com.esiea.tp4A.PlanetMapImpl;
+import com.esiea.tp4A.domain.Direction;
 import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Party;
 import org.junit.jupiter.api.RepeatedTest;
@@ -14,7 +15,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PartyImplTest {
-    @RepeatedTest(20)
+    @RepeatedTest(50)
     void addPlayer() {
         Party party1 = new PartyImpl();
         assertNotNull(party1.addPlayer("a"));
@@ -78,17 +79,18 @@ class PartyImplTest {
         assertEquals(Integer.MAX_VALUE, party4.getLaserRange("a"));
     }
 
-    @Test
+    @RepeatedTest(50)
     void getRoverPosition() {
         Party party1 = new PartyImpl(100, new PlanetMapImpl(), 5);
         party1.addPlayer("a");
         assertNotNull(party1.getRoverPosition("a"));
+        assertNotNull(party1.getRoverPosition("a").getDirection());
         assertNull(party1.getRoverPosition("b"));
         party1.addPlayer("b");
         assertFalse(party1.getRoverPosition("b").getX() == party1.getRoverPosition("a").getX() && party1.getRoverPosition("b").getY() == party1.getRoverPosition("a").getY());
     }
 
-    @RepeatedTest(20)
+    @RepeatedTest(50)
     void radar() {
         PlanetMapImpl map = new PlanetMapImpl();
         map.addObstacle(0, 0);
@@ -147,7 +149,86 @@ class PartyImplTest {
         assertNotEquals(map2.obstaclePositions().size(), party2.radar("a"));
     }
 
-    @Test
+    @RepeatedTest(50)
     void isAlive() {
+        Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
+        assertFalse(party.isAlive("a"));
+        party.addPlayer("a");
+        assertFalse(party.isAlive("a"));
+        party.addPlayer("b");
+        assertFalse(party.isAlive("b"));
+
+        party.start();
+        assertTrue(party.isAlive("a"));
+        assertTrue(party.isAlive("b"));
+
+        Position posA = party.getRoverPosition("a");
+        Position posB = party.getRoverPosition("b");
+
+        if (posA.getDirection() == Direction.WEST || posA.getDirection() == Direction.EAST) {
+            if (posA.getY() == posB.getY()) {
+                party.move("a", "r");
+            }
+        } else if (posA.getDirection() == Direction.SOUTH || posA.getDirection() == Direction.NORTH) {
+            if (posA.getX() == posB.getX()) {
+                party.move("a", "r");
+            }
+        }
+        party.move("a", "s");
+        assertFalse(party.isAlive("a"));
+        assertTrue(party.isAlive("b"));
+    }
+
+    private int floorPos(int x, int mapSize) {
+        return Math.floorMod(x - 1 + (mapSize / 2), mapSize) + 1 - (mapSize / 2);
+    }
+
+    @RepeatedTest(50)
+    void move() {
+        Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
+        assertNull(party.move("a", "f"));
+        party.addPlayer("a");
+        Position pos1 = party.getRoverPosition("a");
+        Position pos2 = party.move("a", "fr");
+        assertEquals(pos1.getX(), pos2.getX());
+        assertEquals(pos1.getY(), pos2.getY());
+        assertEquals(pos1.getDirection(), pos2.getDirection());
+
+        party.addPlayer("b");
+        party.start();
+
+        pos2 = party.getRoverPosition("b");
+        while (Math.pow(pos2.getY() - pos1.getY(), 2) + Math.pow(pos2.getX() - pos1.getX(), 2) < 25) {
+            pos2 = party.move("b", "flfr");
+        }
+
+        pos2 = party.move("a", "frf");
+        switch (pos1.getDirection()) {
+            case NORTH:
+                assertEquals(floorPos(pos1.getX() + 1, 10), pos2.getX());
+                assertEquals(floorPos(pos1.getY() + 1, 10), pos2.getY());
+                assertEquals(Direction.EAST, pos2.getDirection());
+                break;
+            case EAST:
+                assertEquals(floorPos(pos1.getX() + 1, 10), pos2.getX());
+                assertEquals(floorPos(pos1.getY() - 1, 10), pos2.getY());
+                assertEquals(Direction.SOUTH, pos2.getDirection());
+                break;
+            case SOUTH:
+                assertEquals(floorPos(pos1.getX() - 1, 10), pos2.getX());
+                assertEquals(floorPos(pos1.getY() - 1, 10), pos2.getY());
+                assertEquals(Direction.WEST, pos2.getDirection());
+                break;
+            case WEST:
+                assertEquals(floorPos(pos1.getX() - 1, 10), pos2.getX());
+                assertEquals(floorPos(pos1.getY() + 1, 10), pos2.getY());
+                assertEquals(Direction.NORTH, pos2.getDirection());
+                break;
+        }
+
+        pos1 = party.getRoverPosition("a");
+        assertEquals(pos2.getX(), pos1.getX());
+        assertEquals(pos2.getY(), pos1.getY());
+        assertEquals(pos2.getDirection(), pos1.getDirection());
     }
 }

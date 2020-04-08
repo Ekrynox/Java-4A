@@ -1,6 +1,8 @@
 package com.esiea.tp4AGame;
 
+import com.esiea.tp4A.MarsRoverImpl;
 import com.esiea.tp4A.domain.Direction;
+import com.esiea.tp4A.domain.MarsRover;
 import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 import com.esiea.tp4AGame.domain.Party;
@@ -18,12 +20,29 @@ public class PartyImpl implements Party {
     private final Map<String, Player> playersAlive;
 
     final class Player {
-        public final int laserRange;
         public final Position position;
+        public final int laserRange;
+        public final Set<Position> map;
+        public final int mapSize;
 
-        Player(int laserRange, Position position) {
-            this.laserRange = laserRange;
+        public final MarsRover rover;
+
+        Player(Position position, int laserRange, Set<Position> map, int mapSize) {
             this.position = position;
+            this.laserRange = laserRange;
+            this.map = map;
+            this.mapSize = mapSize;
+
+            this.rover = new MarsRoverImpl(this.position, this.laserRange, this.map, this.mapSize);
+        }
+
+        Player(Position position, Player player) {
+            this.position = position;
+            this.laserRange = player.laserRange;
+            this.map = player.map;
+            this.mapSize = player.mapSize;
+
+            this.rover = player.rover.initialize(this.position);
         }
     }
 
@@ -88,7 +107,7 @@ public class PartyImpl implements Party {
         Direction[] d = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
         Position pos = Position.of(x, y, d[new Random().nextInt(d.length)]);
         this.map.add(pos);
-        players.put(playerName, new Player(this.laserRange, pos));
+        players.put(playerName, new Player(pos, this.laserRange, this.map, this.mapSize));
         PlayerController controller = new PlayerControllerImpl();
         return controller.initialize(this, playerName);
     }
@@ -161,11 +180,40 @@ public class PartyImpl implements Party {
 
     @Override
     public Position move(String playerName, String command) {
-        return null;
+        if (!this.players.containsKey(playerName)) {
+            return null;
+        }
+
+        if (!this.playersAlive.containsKey(playerName) || !this.isStarted()) {
+            return this.getRoverPosition(playerName);
+        }
+
+        Player player = this.playersAlive.get(playerName);
+        Position pos = player.position;
+        Position newPos = pos;
+
+        for (char c : command.toCharArray()) {
+            newPos = player.rover.move("" + c);
+            player = new Player(newPos, player);
+            this.players.put(playerName, player);
+
+            Position finalPos = pos;
+            if (this.map.removeIf(tmpPos -> tmpPos.getDirection() == finalPos.getDirection() && tmpPos.getX() == finalPos.getX() && tmpPos.getY() == finalPos.getY())) {
+                this.map.add(newPos);
+                this.playersAlive.put(playerName, player);
+            } else {
+                this.playersAlive.remove(playerName);
+                return newPos;
+            }
+
+            pos = newPos;
+        }
+
+        return newPos;
     }
 
     @Override
     public boolean isAlive(String playerName) {
-        return false;
+        return this.playersAlive.containsKey(playerName);
     }
 }

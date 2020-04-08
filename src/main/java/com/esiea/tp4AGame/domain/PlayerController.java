@@ -29,7 +29,7 @@ public interface PlayerController {
 
     /** Control the rover
      * @param command the actions to do: s: shoot, f: forward, b: backward, l: turn left, r: turn right
-     * @return return the new position
+     * @return return the new position, return null if now rover found
      */
     Position move(String command);
 
