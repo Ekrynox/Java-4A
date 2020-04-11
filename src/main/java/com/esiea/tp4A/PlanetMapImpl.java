@@ -4,9 +4,7 @@ import com.esiea.tp4A.domain.PlanetMap;
 import com.esiea.tp4A.domain.Position;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
-import java.lang.Math;
 
 public class PlanetMapImpl implements PlanetMap {
     private final Set<Position> obstacle;
