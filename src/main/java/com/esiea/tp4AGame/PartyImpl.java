@@ -107,7 +107,11 @@ public class PartyImpl implements Party {
         Direction[] d = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
         Position pos = Position.of(x, y, d[new Random().nextInt(d.length)]);
         this.map.add(pos);
-        players.put(playerName, new Player(pos, this.laserRange, this.map, this.mapSize));
+        this.players.put(playerName, new Player(pos, this.laserRange, this.map, this.mapSize));
+        if (this.isStarted()) {
+            this.playersAlive.put(playerName, new Player(pos, this.laserRange, this.map, this.mapSize));
+        }
+
         PlayerController controller = new PlayerControllerImpl();
         return controller.initialize(this, playerName);
     }
@@ -244,5 +248,16 @@ public class PartyImpl implements Party {
     @Override
     public boolean isAlive(String playerName) {
         return this.playersAlive.containsKey(playerName) || (!this.isStarted() && this.players.containsKey(playerName));
+    }
+
+    @Override
+    public String getPlayerNameByPosition(Position position) {
+        for (Map.Entry<String, Player> player : this.playersAlive.entrySet()) {
+            if (player.getValue().position.getDirection() == position.getDirection() && player.getValue().position.getY() == position.getY() && player.getValue().position.getX() == position.getX()) {
+                return player.getKey();
+            }
+        }
+
+        return "";
     }
 }

@@ -11,7 +11,7 @@ public interface Party {
      */
     PlayerController addPlayer(String playerName);
 
-    /** Start the party if there is at least 2 players
+    /** Start the party
      * @return return the new instance of the party
      */
     boolean start();
@@ -58,4 +58,10 @@ public interface Party {
      * @return true if the player is alive, return false if unknown player or player is dead
      */
     boolean isAlive(String playerName);
+
+    /** Get the name of the player at a specific position
+     * @param position the position to look at
+     * @return return the name of the player at a specific position if it is alive
+     */
+    String getPlayerNameByPosition(Position position);
 }
