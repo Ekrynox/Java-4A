@@ -154,9 +154,9 @@ class PartyImplTest {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         assertFalse(party.isAlive("a"));
         party.addPlayer("a");
-        assertFalse(party.isAlive("a"));
+        assertTrue(party.isAlive("a"));
         party.addPlayer("b");
-        assertFalse(party.isAlive("b"));
+        assertTrue(party.isAlive("b"));
 
         party.start();
         assertTrue(party.isAlive("a"));
