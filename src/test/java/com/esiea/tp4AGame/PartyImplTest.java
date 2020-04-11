@@ -239,6 +239,43 @@ class PartyImplTest {
     }
 
     @RepeatedTest(100)
+    void moveKill() {
+        Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
+        party.addPlayer("a");
+        party.addPlayer("b");
+        assertTrue(party.start());
+        assertEquals("", party.getWinner());
+
+        Position posA = party.getRoverPosition("a");
+        Position posB = party.getRoverPosition("b");
+
+        if(posA.getX() == posB.getX()) {
+            if (posA.getDirection() == Direction.WEST || posA.getDirection() == Direction.EAST) {
+                party.move("a", "r");
+            }
+        } else if(posA.getY() == posB.getY()) {
+            if (posA.getDirection() == Direction.NORTH || posA.getDirection() == Direction.SOUTH) {
+                party.move("a", "l");
+            }
+        } else {
+            if (posA.getDirection() == Direction.WEST || posA.getDirection() == Direction.EAST) {
+                party.move("a", "r");
+            }
+
+            if (posB.getDirection() == Direction.NORTH || posB.getDirection() == Direction.SOUTH) {
+                party.move("b", "r");
+            }
+
+            while (posB.getX() != posA.getX()) {
+                posB = party.move("b", "f");
+            }
+        }
+
+        party.move("a", "s");
+        assertEquals("a", party.getWinner());
+    }
+
+    @RepeatedTest(100)
     void getWinner() {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         assertEquals("", party.getWinner());
