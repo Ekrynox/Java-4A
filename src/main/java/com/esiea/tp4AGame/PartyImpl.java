@@ -243,6 +243,6 @@ public class PartyImpl implements Party {
 
     @Override
     public boolean isAlive(String playerName) {
-        return this.playersAlive.containsKey(playerName);
+        return this.playersAlive.containsKey(playerName) || (!this.isStarted() && this.players.containsKey(playerName));
     }
 }
