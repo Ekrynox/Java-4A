@@ -15,6 +15,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PartyImplTest {
+    @Test
     void addPlayer() {
         Party party1 = new PartyImpl();
         assertNotNull(party1.addPlayer("a"));
@@ -35,11 +36,7 @@ class PartyImplTest {
     @Test
     void start() {
         Party party1 = new PartyImpl();
-        assertFalse(party1.start());
-
         party1.addPlayer("a");
-        assertFalse(party1.start());
-
         party1.addPlayer("aa");
         assertTrue(party1.start());
 
@@ -302,5 +299,21 @@ class PartyImplTest {
         }
         party.move("a", "s");
         assertEquals("b", party.getWinner());
+    }
+
+    @Test
+    void getPlayerNameByPosition() {
+        Party party = new PartyImpl();
+        assertEquals("", party.getPlayerNameByPosition(Position.of(0, 0, Direction.NORTH)));
+        assertEquals("", party.getPlayerNameByPosition(Position.of(-5, 10, Direction.NORTH)));
+        party.addPlayer("a");
+        party.addPlayer("b");
+        party.addPlayer("c");
+        assertEquals("", party.getPlayerNameByPosition(party.getRoverPosition("a")));
+        party.start();
+        assertEquals("a", party.getPlayerNameByPosition(party.getRoverPosition("a")));
+        assertEquals("b", party.getPlayerNameByPosition(party.getRoverPosition("b")));
+        assertEquals("c", party.getPlayerNameByPosition(party.getRoverPosition("c")));
+        assertEquals("a", party.getPlayerNameByPosition(party.getRoverPosition("a")));
     }
 }
