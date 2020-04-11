@@ -214,10 +214,31 @@ public class PartyImpl implements Party {
                 return newPos;
             }
 
+            removeDestroyedPlayer();
+
             pos = newPos;
         }
 
         return newPos;
+    }
+
+    private void removeDestroyedPlayer() {
+        Iterator<Player> iterP = this.playersAlive.values().iterator();
+        while (iterP.hasNext()) {
+            Player p = iterP.next();
+            boolean ok = false;
+
+            for (Position obs : this.map) {
+                if (p.position.getDirection() == obs.getDirection() && p.position.getX() == obs.getX() && p.position.getY() == obs.getY()) {
+                    ok = true;
+                    break;
+                }
+            }
+
+            if (!ok) {
+                iterP.remove();
+            }
+        }
     }
 
     @Override
