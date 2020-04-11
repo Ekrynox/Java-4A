@@ -37,16 +37,19 @@ public class MarsRoverImpl implements MarsRover {
         return new MarsRoverImpl(position, this.laserRange, this.obstacle, this.mapSize);
     }
 
+    // Update the map given as parameter and returns a new rover based on it
     @Override
     public MarsRover updateMap(PlanetMap map) {
         return new MarsRoverImpl(this.position, this.laserRange, map.obstaclePositions(), this.mapSize);
     }
 
+    // Returns a new rover object with the given range
     @Override
     public MarsRover configureLaserRange(int range) {
         return new MarsRoverImpl(this.position, Math.max(range, 0), this.obstacle, this.mapSize);
     }
 
+    // Return a new position for this object
     @Override
     public Position move(String command) {
         Position pos = this.position;
@@ -126,6 +129,7 @@ public class MarsRoverImpl implements MarsRover {
         return Position.of(x, y, pos.getDirection());
     }
 
+    // Returns true if no obstacle are in the way
     private boolean checkIfCanMove(Position pos) {
         Position tmp = getSphericalPos(pos);
         for (Position obs : this.obstacle) {
@@ -138,6 +142,7 @@ public class MarsRoverImpl implements MarsRover {
         return true;
     }
 
+    // Shoot in the current direction and eventually destroy facing obstacles
     private void shoot(Position pos) {
         pos = getSphericalPos(pos);
         int x = pos.getX();
