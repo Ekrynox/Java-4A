@@ -191,8 +191,10 @@ class PartyImplTest {
 
     @RepeatedTest(100)
     void move() {
+        int mapSize = (int) (Math.random() * 90 + 10);
+
         PlanetMapImpl map = new PlanetMapImpl();
-        Party party = new PartyImpl(10, map, Integer.MAX_VALUE);
+        Party party = new PartyImpl(mapSize, map, Integer.MAX_VALUE);
         assertNull(party.move("a", "f"));
         party.addPlayer("a");
         Position pos1 = party.getRoverPosition("a");
@@ -211,23 +213,23 @@ class PartyImplTest {
         pos2 = party.move("a", "frf");
         switch (pos1.getDirection()) {
             case NORTH:
-                assertEquals(floorPos(pos1.getX() + 1, 10), pos2.getX());
-                assertEquals(floorPos(pos1.getY() + 1, 10), pos2.getY());
+                assertEquals(floorPos(pos1.getX() + 1, mapSize), pos2.getX());
+                assertEquals(floorPos(pos1.getY() + 1, mapSize), pos2.getY());
                 assertEquals(Direction.EAST, pos2.getDirection());
                 break;
             case EAST:
-                assertEquals(floorPos(pos1.getX() + 1, 10), pos2.getX());
-                assertEquals(floorPos(pos1.getY() - 1, 10), pos2.getY());
+                assertEquals(floorPos(pos1.getX() + 1, mapSize), pos2.getX());
+                assertEquals(floorPos(pos1.getY() - 1, mapSize), pos2.getY());
                 assertEquals(Direction.SOUTH, pos2.getDirection());
                 break;
             case SOUTH:
-                assertEquals(floorPos(pos1.getX() - 1, 10), pos2.getX());
-                assertEquals(floorPos(pos1.getY() - 1, 10), pos2.getY());
+                assertEquals(floorPos(pos1.getX() - 1, mapSize), pos2.getX());
+                assertEquals(floorPos(pos1.getY() - 1, mapSize), pos2.getY());
                 assertEquals(Direction.WEST, pos2.getDirection());
                 break;
             case WEST:
-                assertEquals(floorPos(pos1.getX() - 1, 10), pos2.getX());
-                assertEquals(floorPos(pos1.getY() + 1, 10), pos2.getY());
+                assertEquals(floorPos(pos1.getX() - 1, mapSize), pos2.getX());
+                assertEquals(floorPos(pos1.getY() + 1, mapSize), pos2.getY());
                 assertEquals(Direction.NORTH, pos2.getDirection());
                 break;
         }
