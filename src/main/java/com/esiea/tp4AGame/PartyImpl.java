@@ -86,7 +86,7 @@ public class PartyImpl implements Party {
 
     @Override
     public PlayerController addPlayer(String playerName) {
-        if (players.containsKey(playerName) || this.isStarted() || this.mapSize * this.mapSize <= this.map.size()) {
+        if (players.containsKey(playerName) || this.mapSize * this.mapSize <= this.map.size()) {
             return null;
         }
 
