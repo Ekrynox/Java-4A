@@ -2,21 +2,25 @@ package com.esiea.tp4ADemoServer;
 
 import com.esiea.tp4ADemoServer.json.JsonStatus;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ApiPlayerTest {
-    @Test
+    @RepeatedTest(50)
     void addPlayer() {
         ApiPlayer api = new ApiPlayer();
         assertEquals(201, api.addPlayer("a").getStatus());
         assertEquals(409, api.addPlayer("a").getStatus());
 
+        for (int i = 0; i < 100; i++) {
+            assertEquals(201, api.addPlayer("a" + i).getStatus());
+        }
+
         assertEquals(201, api.addPlayer("b").getStatus());
     }
 
-    @Test
+    @RepeatedTest(50)
     void getStatus() {
         ApiPlayer api = new ApiPlayer();
         assertEquals(404, api.getStatus("a").getStatus());
@@ -24,7 +28,7 @@ class ApiPlayerTest {
         assertEquals(200, api.getStatus("a").getStatus());
     }
 
-    @Test
+    @RepeatedTest(50)
     void sendCommand() {
         ApiPlayer api = new ApiPlayer();
         assertEquals(404, api.sendCommand("a", "").getStatus());
