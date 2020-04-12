@@ -15,8 +15,8 @@ import java.util.Set;
 @Path("/player/{playerName}")
 @Produces(MediaType.APPLICATION_JSON)
 public class ApiPlayer {
-    private static final Party party = new PartyImpl();
-    private static final Gson gson = new Gson();
+    public final Party party = new PartyImpl();
+    private final Gson gson = new Gson();
 
     private JsonStatus createStatus(String playerName) {
         Set<JsonObstacle> jsonObstacle = new HashSet<>();

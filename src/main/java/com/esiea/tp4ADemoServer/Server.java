@@ -11,7 +11,8 @@ import java.net.URI;
 public class Server {
     public static void main(String[] args) throws IOException {
         URI baseUri = UriBuilder.fromUri("http://localhost/api/").port(8080).build();
-        ResourceConfig resourceConfig = new ResourceConfig(ApiPlayer.class);
+        ResourceConfig resourceConfig = new ResourceConfig();
+        resourceConfig.register(new ApiPlayer());
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
         System.out.println("Press enter to stop the server...");
         System.in.read();
