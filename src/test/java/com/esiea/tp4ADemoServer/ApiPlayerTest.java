@@ -2,11 +2,78 @@ package com.esiea.tp4ADemoServer;
 
 import com.esiea.tp4ADemoServer.json.JsonStatus;
 import com.google.gson.Gson;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.junit.jupiter.api.RepeatedTest;
+
+import javax.ws.rs.core.Response;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ApiPlayerTest {
+    private final String schema = "{\n" +
+        "    \"$schema\": \"http://json-schema.org/draft-07/schema\",\n" +
+        "    \"type\": \"object\",\n" +
+        "    \"properties\": {\n" +
+        "        \"player\": {\n" +
+        "            \"type\": \"object\",\n" +
+        "            \"properties\": {\n" +
+        "                \"name\": { \"type\": \"string\" },\n" +
+        "                \"status\": { \"type\": \"string\", \"enum\": [\"alive\", \"dead\"]},\n" +
+        "                \"position\": {\n" +
+        "                    \"type\": \"object\",\n" +
+        "                    \"properties\": {\n" +
+        "                        \"x\": { \"type\": \"integer\" },\n" +
+        "                        \"y\": { \"type\": \"integer\" },\n" +
+        "                        \"direction\": { \"type\": \"string\", \"enum\": [\"NORTH\", \"EAST\", \"SOUTH\", \"WEST\"]}\n" +
+        "                    },\n" +
+        "                    \"additionalProperties\": false,\n" +
+        "                    \"required\": [\"x\", \"y\", \"direction\"]\n" +
+        "                },\n" +
+        "                \"laser-range\": { \"type\": \"integer\", \"exclusiveMinimum\": 0 }\n" +
+        "            },\n" +
+        "            \"additionalProperties\": false,\n" +
+        "            \"required\": [\"name\", \"status\", \"position\", \"laser-range\"]\n" +
+        "        },\n" +
+        "        \"local-map\": {\n" +
+        "            \"type\": \"object\",\n" +
+        "            \"properties\": {\n" +
+        "                \"obstacles\": {\n" +
+        "                    \"type\": \"array\",\n" +
+        "                    \"items\": {\n" +
+        "                        \"type\": \"object\",\n" +
+        "                        \"properties\": {\n" +
+        "                            \"x\": { \"type\": \"integer\" },\n" +
+        "                            \"y\": { \"type\": \"integer\" }\n" +
+        "                        },\n" +
+        "                        \"additionalProperties\": false,\n" +
+        "                        \"required\": [\"x\", \"y\"]\n" +
+        "                    }\n" +
+        "                },\n" +
+        "                \"players\": {\n" +
+        "                    \"type\": \"array\",\n" +
+        "                    \"items\": {\n" +
+        "                        \"type\": \"object\",\n" +
+        "                        \"properties\": {\n" +
+        "                            \"name\": { \"type\": \"string\" },\n" +
+        "                            \"x\": { \"type\": \"integer\" },\n" +
+        "                            \"y\": { \"type\": \"integer\" }\n" +
+        "                        },\n" +
+        "                        \"additionalProperties\": false,\n" +
+        "                        \"required\": [\"name\", \"x\", \"y\"]\n" +
+        "                    }\n" +
+        "                }\n" +
+        "            },\n" +
+        "            \"additionalProperties\": false,\n" +
+        "            \"required\": [\"obstacles\", \"players\"]\n" +
+        "        }\n" +
+        "    },\n" +
+        "    \"additionalProperties\": false,\n" +
+        "    \"required\": [\"player\", \"local-map\"]\n" +
+        "}\n";
+
     @RepeatedTest(50)
     void addPlayer() {
         ApiPlayer api = new ApiPlayer();
@@ -17,7 +84,12 @@ class ApiPlayerTest {
             assertEquals(201, api.addPlayer("a" + i).getStatus());
         }
 
-        assertEquals(201, api.addPlayer("b").getStatus());
+        Response resp = api.addPlayer("b");
+        assertEquals(201, resp.getStatus());
+
+        JSONObject rawSchema = new JSONObject(new JSONTokener(schema));
+        Schema schema = SchemaLoader.load(rawSchema);
+        schema.validate(new JSONObject(resp.getEntity().toString()));
     }
 
     @RepeatedTest(50)
@@ -25,7 +97,12 @@ class ApiPlayerTest {
         ApiPlayer api = new ApiPlayer();
         assertEquals(404, api.getStatus("a").getStatus());
         api.addPlayer("a");
-        assertEquals(200, api.getStatus("a").getStatus());
+        Response resp = api.getStatus("a");
+        assertEquals(200, resp.getStatus());
+
+        JSONObject rawSchema = new JSONObject(new JSONTokener(schema));
+        Schema schema = SchemaLoader.load(rawSchema);
+        schema.validate(new JSONObject(resp.getEntity().toString()));
     }
 
     @RepeatedTest(50)
@@ -33,7 +110,12 @@ class ApiPlayerTest {
         ApiPlayer api = new ApiPlayer();
         assertEquals(404, api.sendCommand("a", "").getStatus());
         api.addPlayer("a");
-        assertEquals(200, api.sendCommand("a", "").getStatus());
+        Response resp = api.sendCommand("a", "");
+        assertEquals(200, resp.getStatus());
+
+        JSONObject rawSchema = new JSONObject(new JSONTokener(schema));
+        Schema schema = SchemaLoader.load(rawSchema);
+        schema.validate(new JSONObject(resp.getEntity().toString()));
 
         Gson gson = new Gson();
         String direction = gson.fromJson(api.sendCommand("a", "").getEntity().toString(), JsonStatus.class).player.position.direction;
