@@ -139,6 +139,10 @@ public class PartyImpl implements Party {
             return null;
         }
 
+        if (!this.isAlive(playerName)) {
+            return new HashSet<>();
+        }
+
         Position pos = this.getRoverPosition(playerName);
         int x = pos.getX();
         int y = pos.getY();
