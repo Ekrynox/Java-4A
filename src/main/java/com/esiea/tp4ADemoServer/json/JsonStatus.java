@@ -1,4 +1,4 @@
-package com.esiea.tp4AGame.json;
+package com.esiea.tp4ADemoServer.json;
 
 import com.google.gson.annotations.SerializedName;
 
