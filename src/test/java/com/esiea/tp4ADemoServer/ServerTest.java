@@ -11,7 +11,7 @@ class ServerTest {
         Runnable main = () -> {
             try {
                 Server.main(new String[] {});
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         };
@@ -21,5 +21,6 @@ class ServerTest {
 
         mainT.join(5000);
         mainT.interrupt();
+        mainT.join();
     }
 }
