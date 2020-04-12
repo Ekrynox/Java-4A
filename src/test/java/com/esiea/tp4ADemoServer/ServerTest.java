@@ -10,7 +10,8 @@ class ServerTest {
     void main() throws InterruptedException {
         Runnable main = () -> {
             try {
-                Server.main(new String[] {});
+                Server server = new Server();
+                server.main(new String[] {});
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -18,9 +19,7 @@ class ServerTest {
 
         Thread mainT = new Thread(main);
         mainT.start();
-
-        mainT.join(5000);
-        mainT.interrupt();
+        
         mainT.join();
     }
 }
