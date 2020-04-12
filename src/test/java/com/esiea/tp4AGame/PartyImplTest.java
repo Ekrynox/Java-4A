@@ -301,11 +301,11 @@ class PartyImplTest {
         assertEquals("b", party.getWinner());
     }
 
-    @Test
+    @RepeatedTest(10)
     void getPlayerNameByPosition() {
         Party party = new PartyImpl();
         assertEquals("", party.getPlayerNameByPosition(Position.of(0, 0, Direction.NORTH)));
-        assertEquals("", party.getPlayerNameByPosition(Position.of(-5, 10, Direction.NORTH)));
+        assertEquals("", party.getPlayerNameByPosition(Position.of(-5, 10, Direction.EAST)));
         party.addPlayer("a");
         party.addPlayer("b");
         party.addPlayer("c");
@@ -315,5 +315,8 @@ class PartyImplTest {
         assertEquals("b", party.getPlayerNameByPosition(party.getRoverPosition("b")));
         assertEquals("c", party.getPlayerNameByPosition(party.getRoverPosition("c")));
         assertEquals("a", party.getPlayerNameByPosition(party.getRoverPosition("a")));
+
+        assertEquals("", party.getPlayerNameByPosition(Position.of(party.getRoverPosition("a").getX() + 1, party.getRoverPosition("a").getY(), party.getRoverPosition("a").getDirection())));
+        assertEquals("", party.getPlayerNameByPosition(Position.of(party.getRoverPosition("a").getX(), party.getRoverPosition("a").getY() + 1, party.getRoverPosition("a").getDirection())));
     }
 }
