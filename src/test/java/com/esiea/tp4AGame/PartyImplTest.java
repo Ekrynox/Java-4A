@@ -120,6 +120,42 @@ class PartyImplTest {
     }
 
     @RepeatedTest(100)
+    void radarDead() {
+        Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
+        party.addPlayer("a");
+        party.addPlayer("b");
+        assertNotEquals(0, party.radar("b").size());
+
+        Position posA = party.getRoverPosition("a");
+        Position posB = party.getRoverPosition("b");
+
+        if(posA.getX() == posB.getX()) {
+            if (posA.getDirection() == Direction.WEST || posA.getDirection() == Direction.EAST) {
+                party.move("a", "r");
+            }
+        } else if(posA.getY() == posB.getY()) {
+            if (posA.getDirection() == Direction.NORTH || posA.getDirection() == Direction.SOUTH) {
+                party.move("a", "l");
+            }
+        } else {
+            if (posA.getDirection() == Direction.WEST || posA.getDirection() == Direction.EAST) {
+                party.move("a", "r");
+            }
+
+            if (posB.getDirection() == Direction.NORTH || posB.getDirection() == Direction.SOUTH) {
+                party.move("b", "r");
+            }
+
+            while (posB.getX() != posA.getX()) {
+                posB = party.move("b", "f");
+            }
+        }
+
+        party.move("a", "s");
+        assertEquals(0, party.radar("b").size());
+    }
+
+    @RepeatedTest(100)
     void isAlive() {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         assertFalse(party.isAlive("a"));
