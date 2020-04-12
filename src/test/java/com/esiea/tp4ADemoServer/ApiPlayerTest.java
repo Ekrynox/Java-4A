@@ -148,6 +148,6 @@ class ApiPlayerTest {
         gson.toJson(new JsonPlayer("a", false, Position.of(0, 10, Direction.NORTH), 5));
         gson.toJson(new JsonPlayer("a", true, Position.of(0, 10, Direction.EAST), 5));
         gson.toJson(new JsonPlayer("a", false, Position.of(0, 10, Direction.WEST), 5));
-        gson.toJson(new JsonPlayer("a", true, Position.of(0, 10, Direction.SOUTH), 5));
+        gson.toJson(new JsonPlayer("a", true, Position.of(0, 10, null), 5));
     }
 }
