@@ -1,5 +1,8 @@
 package com.esiea.tp4ADemoServer;
 
+import com.esiea.tp4A.domain.Direction;
+import com.esiea.tp4A.domain.Position;
+import com.esiea.tp4ADemoServer.json.JsonPlayer;
 import com.esiea.tp4ADemoServer.json.JsonStatus;
 import com.google.gson.Gson;
 import org.everit.json.schema.Schema;
@@ -7,6 +10,7 @@ import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 
@@ -92,7 +96,7 @@ class ApiPlayerTest {
         schema.validate(new JSONObject(resp.getEntity().toString()));
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(100)
     void getStatus() {
         ApiPlayer api = new ApiPlayer();
         assertEquals(404, api.getStatus("a").getStatus());
@@ -105,7 +109,7 @@ class ApiPlayerTest {
         schema.validate(new JSONObject(resp.getEntity().toString()));
     }
 
-    @RepeatedTest(50)
+    @RepeatedTest(100)
     void sendCommand() {
         ApiPlayer api = new ApiPlayer();
         assertEquals(404, api.sendCommand("a", "").getStatus());
@@ -135,5 +139,15 @@ class ApiPlayerTest {
                 assertEquals("NORTH", directionBis);
                 break;
         }
+    }
+
+    @Test
+    void jsonPlayer() {
+        Gson gson = new Gson();
+        gson.toJson(new JsonPlayer("a", false, Position.of(0, 10, Direction.NORTH), 5));
+        gson.toJson(new JsonPlayer("a", false, Position.of(0, 10, Direction.NORTH), 5));
+        gson.toJson(new JsonPlayer("a", true, Position.of(0, 10, Direction.EAST), 5));
+        gson.toJson(new JsonPlayer("a", false, Position.of(0, 10, Direction.WEST), 5));
+        gson.toJson(new JsonPlayer("a", true, Position.of(0, 10, Direction.SOUTH), 5));
     }
 }
