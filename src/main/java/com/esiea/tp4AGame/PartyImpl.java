@@ -118,7 +118,7 @@ public class PartyImpl implements Party {
 
     @Override
     public boolean start() {
-        if (this.players.size() < 2 || this.isStarted()) {
+        if (this.isStarted()) {
             return false;
         }
 
