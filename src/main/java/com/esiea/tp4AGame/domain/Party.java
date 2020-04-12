@@ -11,22 +11,10 @@ public interface Party {
      */
     PlayerController addPlayer(String playerName);
 
-    /** Start the party
-     * @return return the new instance of the party
-     */
-    boolean start();
-
-    /** Get if the party has been started
-     * @return true if the party have been started
-     */
-    boolean isStarted();
-
     /** Get the state of the game
      * @return the name of the winner, if empty string the game is not finished
      */
     String getWinner();
-
-
 
     /** Get the position of the rover
      * @param playerName The name of the player

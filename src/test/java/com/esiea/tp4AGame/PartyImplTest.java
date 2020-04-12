@@ -21,8 +21,6 @@ class PartyImplTest {
         assertNotNull(party1.addPlayer("a"));
         assertNull(party1.addPlayer("a"));
         assertNotNull(party1.addPlayer("b"));
-
-        party1.start();
         assertNotNull(party1.addPlayer("c"));
 
         Party party2 = new PartyImpl(2, new PlanetMapImpl(), 0);
@@ -31,30 +29,6 @@ class PartyImplTest {
         assertNotNull(party2.addPlayer("c"));
         assertNotNull(party2.addPlayer("d"));
         assertNull(party2.addPlayer("e"));
-    }
-
-    @Test
-    void start() {
-        Party party1 = new PartyImpl();
-        party1.addPlayer("a");
-        party1.addPlayer("aa");
-        assertTrue(party1.start());
-
-        assertFalse(party1.start());
-    }
-
-    @Test
-    void isStarted() {
-        Party party1 = new PartyImpl();
-        assertFalse(party1.isStarted());
-
-        party1.addPlayer("a");
-        assertFalse(party1.isStarted());
-        party1.addPlayer("aa");
-        assertFalse(party1.isStarted());
-
-        party1.start();
-        assertTrue(party1.isStarted());
     }
 
     @Test
@@ -154,10 +128,6 @@ class PartyImplTest {
         party.addPlayer("b");
         assertTrue(party.isAlive("b"));
 
-        party.start();
-        assertTrue(party.isAlive("a"));
-        assertTrue(party.isAlive("b"));
-
         Position posA = party.getRoverPosition("a");
         Position posB = party.getRoverPosition("b");
 
@@ -177,8 +147,7 @@ class PartyImplTest {
         Position pos = party.getRoverPosition("a");
         assertEquals(pos, party.move("a", "f"));
 
-        pos = party.getRoverPosition("b");
-        assertEquals(pos, party.move("b", "f"));
+        assertEquals("b", party.getWinner());
     }
 
     private int floorPos(int x, int mapSize) {
@@ -195,12 +164,11 @@ class PartyImplTest {
         party.addPlayer("a");
         Position pos1 = party.getRoverPosition("a");
         Position pos2 = party.move("a", "fr");
-        assertEquals(pos1.getX(), pos2.getX());
-        assertEquals(pos1.getY(), pos2.getY());
-        assertEquals(pos1.getDirection(), pos2.getDirection());
+        assertTrue(pos1.getX() == pos2.getX() ^ pos1.getY() == pos2.getY());
+        assertNotEquals(pos1.getDirection(), pos2.getDirection());
+        pos1 = pos2;
 
         party.addPlayer("b");
-        party.start();
 
         pos2 = party.getRoverPosition("b");
         Position finalPos = pos2;
@@ -241,7 +209,6 @@ class PartyImplTest {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         party.addPlayer("a");
         party.addPlayer("b");
-        assertTrue(party.start());
         assertEquals("", party.getWinner());
 
         Position posA = party.getRoverPosition("a");
@@ -278,11 +245,8 @@ class PartyImplTest {
         Party party = new PartyImpl(10, new PlanetMapImpl(), Integer.MAX_VALUE);
         assertEquals("", party.getWinner());
         party.addPlayer("a");
-        assertEquals("", party.getWinner());
+        assertEquals("a", party.getWinner());
         party.addPlayer("b");
-        assertEquals("", party.getWinner());
-
-        party.start();
         assertEquals("", party.getWinner());
 
         Position posA = party.getRoverPosition("a");
@@ -309,8 +273,6 @@ class PartyImplTest {
         party.addPlayer("a");
         party.addPlayer("b");
         party.addPlayer("c");
-        assertEquals("", party.getPlayerNameByPosition(party.getRoverPosition("a")));
-        party.start();
         assertEquals("a", party.getPlayerNameByPosition(party.getRoverPosition("a")));
         assertEquals("b", party.getPlayerNameByPosition(party.getRoverPosition("b")));
         assertEquals("c", party.getPlayerNameByPosition(party.getRoverPosition("c")));
