@@ -107,37 +107,17 @@ public class PartyImpl implements Party {
         Direction[] d = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
         Position pos = Position.of(x, y, d[new Random().nextInt(d.length)]);
         this.map.add(pos);
-        this.players.put(playerName, new Player(pos, this.laserRange, this.map, this.mapSize));
-        if (this.isStarted()) {
-            this.playersAlive.put(playerName, new Player(pos, this.laserRange, this.map, this.mapSize));
-        }
+        Player player = new Player(pos, this.laserRange, this.map, this.mapSize);
+        this.players.put(playerName, player);
+        this.playersAlive.put(playerName, player);
 
         PlayerController controller = new PlayerControllerImpl();
         return controller.initialize(this, playerName);
     }
 
     @Override
-    public boolean start() {
-        if (this.isStarted()) {
-            return false;
-        }
-
-        this.playersAlive.putAll(this.players);
-        return true;
-    }
-
-    @Override
-    public boolean isStarted() {
-        return this.playersAlive.size() > 0;
-    }
-
-    @Override
     public String getWinner() {
-        if (!this.isStarted()) {
-            return "";
-        }
-
-        if (this.playersAlive.size() > 1) {
+        if (this.playersAlive.size() != 1) {
             return "";
         }
 
@@ -196,7 +176,7 @@ public class PartyImpl implements Party {
             return null;
         }
 
-        if (!this.playersAlive.containsKey(playerName) || !this.getWinner().equals("")) {
+        if (!this.playersAlive.containsKey(playerName)) {
             return this.getRoverPosition(playerName);
         }
 
@@ -247,7 +227,7 @@ public class PartyImpl implements Party {
 
     @Override
     public boolean isAlive(String playerName) {
-        return this.playersAlive.containsKey(playerName) || (!this.isStarted() && this.players.containsKey(playerName));
+        return this.playersAlive.containsKey(playerName);
     }
 
     @Override
