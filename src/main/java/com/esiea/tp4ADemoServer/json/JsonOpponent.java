@@ -1,4 +1,4 @@
-package com.esiea.tp4AGame.json;
+package com.esiea.tp4ADemoServer.json;
 
 public class JsonOpponent {
     public JsonOpponent(String name, int x, int y) {
